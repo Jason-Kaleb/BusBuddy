@@ -1,7 +1,7 @@
 // import 'package:busbuddy/views/get_started_view.dart';
-//import 'package:busbuddy/views/login_view.dart';
+import 'package:busbuddy/views/login_view.dart';
 import 'package:busbuddy/views/map_view.dart';
-//import 'package:busbuddy/views/register_view.dart';
+import 'package:busbuddy/views/register_view.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
         //colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MapView(),
+      home: const RegisterView(),
     );
   }
 }
