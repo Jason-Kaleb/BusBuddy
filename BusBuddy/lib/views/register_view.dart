@@ -1,7 +1,30 @@
+import 'package:busbuddy/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
-class RegisterView extends StatelessWidget {
+class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
+
+  @override
+  _RegisterViewState createState() => _RegisterViewState();
+}
+
+class _RegisterViewState extends State<RegisterView> {
+  // Declare the TextEditingControllers
+  final TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+
+  // Dispose the controllers when no longer needed
+  @override
+  void dispose() {
+    _fullNameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -9,6 +32,7 @@ class RegisterView extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
+        title: const Text('Register', style: TextStyle(color: Colors.black)),
       ),
       body: SingleChildScrollView(
         child: Center(
@@ -31,17 +55,16 @@ class RegisterView extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 52.0),
+
+              // Full Name Field
               SizedBox(
                 width: 350,
                 child: TextField(
+                  controller: _fullNameController,
                   enableSuggestions: false,
                   autocorrect: false,
-                  autofocus: false,
                   decoration: InputDecoration(
-                    prefixIcon: const Icon(
-                      Icons.person,
-                      color: Colors.grey,
-                    ),
+                    prefixIcon: const Icon(Icons.person, color: Colors.grey),
                     filled: true,
                     fillColor: const Color.fromARGB(217, 219, 219, 219),
                     contentPadding: const EdgeInsets.symmetric(
@@ -49,46 +72,25 @@ class RegisterView extends StatelessWidget {
                       vertical: 14.0,
                     ),
                     border: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        color: Color.fromARGB(217, 219, 219, 219),
-                        width: 1.0,
-                      ),
-                      borderRadius: BorderRadius.circular(22.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        color: Color.fromARGB(217, 219, 219, 219),
-                        width: 1.0,
-                      ),
-                      borderRadius: BorderRadius.circular(22.0),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        color: Color.fromARGB(217, 219, 219, 219),
-                        width: 1.0,
-                      ),
                       borderRadius: BorderRadius.circular(22.0),
                     ),
                     labelText: 'Enter your full name',
-                    labelStyle:
-                        const TextStyle(color: Colors.black, fontSize: 18),
-                    alignLabelWithHint: true,
+                    labelStyle: const TextStyle(color: Colors.black, fontSize: 18),
                   ),
                 ),
               ),
               const SizedBox(height: 30.0),
+
+              // Email Field
               SizedBox(
                 width: 350,
                 child: TextField(
-                  autofocus: false,
+                  controller: _emailController,
                   enableSuggestions: false,
                   autocorrect: false,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
-                    prefixIcon: const Icon(
-                      Icons.email,
-                      color: Colors.grey,
-                    ),
+                    prefixIcon: const Icon(Icons.email, color: Colors.grey),
                     filled: true,
                     fillColor: const Color.fromARGB(217, 219, 219, 219),
                     contentPadding: const EdgeInsets.symmetric(
@@ -96,46 +98,25 @@ class RegisterView extends StatelessWidget {
                       vertical: 14.0,
                     ),
                     border: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        color: Color.fromARGB(217, 219, 219, 219),
-                        width: 1.0,
-                      ),
-                      borderRadius: BorderRadius.circular(22.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        color: Color.fromARGB(217, 219, 219, 219),
-                        width: 1.0,
-                      ),
-                      borderRadius: BorderRadius.circular(22.0),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        color: Color.fromARGB(217, 219, 219, 219),
-                        width: 1.0,
-                      ),
                       borderRadius: BorderRadius.circular(22.0),
                     ),
                     labelText: 'Enter your email',
-                    labelStyle:
-                        const TextStyle(color: Colors.black, fontSize: 18),
-                    alignLabelWithHint: true,
+                    labelStyle: const TextStyle(color: Colors.black, fontSize: 18),
                   ),
                 ),
               ),
               const SizedBox(height: 30.0),
+
+              // Password Field
               SizedBox(
                 width: 350,
                 child: TextField(
-                  autofocus: false,
+                  controller: _passwordController,
                   obscureText: true,
                   enableSuggestions: false,
                   autocorrect: false,
                   decoration: InputDecoration(
-                    prefixIcon: const Icon(
-                      Icons.password,
-                      color: Colors.grey,
-                    ),
+                    prefixIcon: const Icon(Icons.lock, color: Colors.grey),
                     filled: true,
                     fillColor: const Color.fromARGB(217, 219, 219, 219),
                     contentPadding: const EdgeInsets.symmetric(
@@ -143,46 +124,25 @@ class RegisterView extends StatelessWidget {
                       vertical: 14.0,
                     ),
                     border: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        color: Color.fromARGB(217, 219, 219, 219),
-                        width: 1.0,
-                      ),
-                      borderRadius: BorderRadius.circular(22.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        color: Color.fromARGB(217, 219, 219, 219),
-                        width: 1.0,
-                      ),
-                      borderRadius: BorderRadius.circular(22.0),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        color: Color.fromARGB(217, 219, 219, 219),
-                        width: 1.0,
-                      ),
                       borderRadius: BorderRadius.circular(22.0),
                     ),
                     labelText: 'Enter your password',
-                    labelStyle:
-                        const TextStyle(color: Colors.black, fontSize: 18),
-                    alignLabelWithHint: true,
+                    labelStyle: const TextStyle(color: Colors.black, fontSize: 18),
                   ),
                 ),
               ),
               const SizedBox(height: 30.0),
+
+              // Confirm Password Field
               SizedBox(
                 width: 350,
                 child: TextField(
-                  autofocus: false,
+                  controller: _confirmPasswordController,
                   obscureText: true,
                   enableSuggestions: false,
                   autocorrect: false,
                   decoration: InputDecoration(
-                    prefixIcon: const Icon(
-                      Icons.password,
-                      color: Colors.grey,
-                    ),
+                    prefixIcon: const Icon(Icons.lock, color: Colors.grey),
                     filled: true,
                     fillColor: const Color.fromARGB(217, 219, 219, 219),
                     contentPadding: const EdgeInsets.symmetric(
@@ -190,36 +150,40 @@ class RegisterView extends StatelessWidget {
                       vertical: 14.0,
                     ),
                     border: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        color: Color.fromARGB(217, 219, 219, 219),
-                        width: 1.0,
-                      ),
-                      borderRadius: BorderRadius.circular(22.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        color: Color.fromARGB(217, 219, 219, 219),
-                        width: 1.0,
-                      ),
-                      borderRadius: BorderRadius.circular(22.0),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        color: Color.fromARGB(217, 219, 219, 219),
-                        width: 1.0,
-                      ),
                       borderRadius: BorderRadius.circular(22.0),
                     ),
                     labelText: 'Confirm password',
-                    labelStyle:
-                        const TextStyle(color: Colors.black, fontSize: 18),
-                    alignLabelWithHint: true,
+                    labelStyle: const TextStyle(color: Colors.black, fontSize: 18),
                   ),
                 ),
               ),
               const SizedBox(height: 50.0),
+
+              // Register Button
               TextButton(
-                onPressed: () {},
+                onPressed: () async {
+                  String fullName = _fullNameController.text.trim();
+                  String email = _emailController.text.trim();
+                  String password = _passwordController.text.trim();
+                  String confirmPassword = _confirmPasswordController.text.trim();
+
+                  if (password != confirmPassword) {
+                    Fluttertoast.showToast(
+                      msg: 'Passwords do not match',
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.SNACKBAR,
+                      backgroundColor: Colors.black54,
+                      textColor: Colors.white,
+                    );
+                    return;
+                  }
+
+                  await AuthService().signup(
+                    fullName: fullName,
+                    email: email,
+                    password: password,
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(350, 50),
                   backgroundColor: const Color(0xFFFF4500),
@@ -232,9 +196,11 @@ class RegisterView extends StatelessWidget {
               ),
               const SizedBox(height: 30.0),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  // Navigate to login view or handle it accordingly
+                },
                 child: const Text(
-                  'Already have an Account, Login Here!',
+                  'Already have an Account? Login Here!',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 17,
