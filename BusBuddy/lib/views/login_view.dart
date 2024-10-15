@@ -1,4 +1,6 @@
 import 'package:busbuddy/services/auth_service.dart';
+import  'package:busbuddy/views/register_view.dart';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -183,7 +185,14 @@ class _LoginViewState extends State<LoginView> {
               ),
               const SizedBox(height: 10.0),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                   Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const RegisterView(),
+                       ),
+                    );
+                },
                 child: const Text(
                   'Don\'t have an account? Sign up!',
                   style: TextStyle(

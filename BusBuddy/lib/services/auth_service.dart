@@ -60,6 +60,7 @@ class AuthService {
       // Update the user's display name with the full name
 
 
+
     } on FirebaseAuthException catch (e) {
       String message = '';
       if (e.code == 'user-not-found') {
@@ -85,5 +86,19 @@ class AuthService {
         fontSize: 14.0,
       );
     }
+  }
+  Future <void> updateDisplayName(String displayName) async{
+    try {
+      await FirebaseAuth.instance.currentUser!.updateDisplayName(displayName);
+      } on FirebaseAuthException {
+        Fluttertoast.showToast(
+          msg: 'Failed to update display name',
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.black54,
+          textColor: Colors.white,
+          fontSize: 14.0,
+          );
+      }
   }
 }

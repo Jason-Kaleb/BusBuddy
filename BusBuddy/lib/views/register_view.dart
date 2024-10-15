@@ -1,6 +1,7 @@
 import 'package:busbuddy/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:busbuddy/views/login_view.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -197,7 +198,12 @@ class _RegisterViewState extends State<RegisterView> {
               const SizedBox(height: 30.0),
               TextButton(
                 onPressed: () {
-                  // Navigate to login view or handle it accordingly
+                   Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LoginView(),
+                       ),
+                    );
                 },
                 child: const Text(
                   'Already have an Account? Login Here!',
