@@ -1,3 +1,4 @@
+import 'package:busbuddy/constants/routes.dart';
 import 'package:flutter/material.dart';
 
 class CustomDrawer extends StatelessWidget {
@@ -10,38 +11,46 @@ class CustomDrawer extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          const DrawerHeader(
-            decoration: BoxDecoration(
+          DrawerHeader(
+            decoration: const BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.all(
                 Radius.circular(30),
               ),
             ),
-            child: UserAccountsDrawerHeader(
-              accountName: Text(
-                "Gojo",
-                style: TextStyle(
-                  fontSize: 17,
-                  color: Colors.black,
+            child: InkWell(
+              onTap: () {
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  personalRoute,
+                  (route) => false,
+                );
+              },
+              child: const UserAccountsDrawerHeader(
+                accountName: Text(
+                  "Gojo",
+                  style: TextStyle(
+                    fontSize: 17,
+                    color: Colors.black,
+                  ),
                 ),
-              ),
-              accountEmail: Text(
-                "Satori@gmail.com",
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.black,
+                accountEmail: Text(
+                  "Satori@gmail.com",
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.black,
+                  ),
                 ),
-              ),
-              currentAccountPictureSize: Size.square(50),
-              currentAccountPicture: CircleAvatar(
-                backgroundColor: Color.fromARGB(255, 240, 239, 239),
-                child: Icon(
-                  Icons.person,
-                  color: Color.fromARGB(255, 141, 140, 140),
+                currentAccountPictureSize: Size.square(50),
+                currentAccountPicture: CircleAvatar(
+                  backgroundColor: Color.fromARGB(255, 240, 239, 239),
+                  child: Icon(
+                    Icons.person,
+                    color: Color.fromARGB(255, 141, 140, 140),
+                  ),
                 ),
-              ),
-              decoration: BoxDecoration(
-                color: Colors.white,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                ),
               ),
             ),
           ),

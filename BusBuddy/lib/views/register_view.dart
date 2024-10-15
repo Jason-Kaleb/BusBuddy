@@ -1,3 +1,4 @@
+import 'package:busbuddy/constants/routes.dart';
 import 'package:busbuddy/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -15,7 +16,8 @@ class _RegisterViewState extends State<RegisterView> {
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   // Dispose the controllers when no longer needed
   @override
@@ -31,10 +33,6 @@ class _RegisterViewState extends State<RegisterView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: const Text('Register', style: TextStyle(color: Colors.black)),
-      ),
       body: SingleChildScrollView(
         child: Center(
           child: Column(
@@ -76,7 +74,8 @@ class _RegisterViewState extends State<RegisterView> {
                       borderRadius: BorderRadius.circular(22.0),
                     ),
                     labelText: 'Enter your full name',
-                    labelStyle: const TextStyle(color: Colors.black, fontSize: 18),
+                    labelStyle:
+                        const TextStyle(color: Colors.black, fontSize: 18),
                   ),
                 ),
               ),
@@ -102,7 +101,8 @@ class _RegisterViewState extends State<RegisterView> {
                       borderRadius: BorderRadius.circular(22.0),
                     ),
                     labelText: 'Enter your email',
-                    labelStyle: const TextStyle(color: Colors.black, fontSize: 18),
+                    labelStyle:
+                        const TextStyle(color: Colors.black, fontSize: 18),
                   ),
                 ),
               ),
@@ -128,7 +128,8 @@ class _RegisterViewState extends State<RegisterView> {
                       borderRadius: BorderRadius.circular(22.0),
                     ),
                     labelText: 'Enter your password',
-                    labelStyle: const TextStyle(color: Colors.black, fontSize: 18),
+                    labelStyle:
+                        const TextStyle(color: Colors.black, fontSize: 18),
                   ),
                 ),
               ),
@@ -154,7 +155,8 @@ class _RegisterViewState extends State<RegisterView> {
                       borderRadius: BorderRadius.circular(22.0),
                     ),
                     labelText: 'Confirm password',
-                    labelStyle: const TextStyle(color: Colors.black, fontSize: 18),
+                    labelStyle:
+                        const TextStyle(color: Colors.black, fontSize: 18),
                   ),
                 ),
               ),
@@ -166,7 +168,8 @@ class _RegisterViewState extends State<RegisterView> {
                   String fullName = _fullNameController.text.trim();
                   String email = _emailController.text.trim();
                   String password = _passwordController.text.trim();
-                  String confirmPassword = _confirmPasswordController.text.trim();
+                  String confirmPassword =
+                      _confirmPasswordController.text.trim();
 
                   if (password != confirmPassword) {
                     Fluttertoast.showToast(
@@ -184,6 +187,13 @@ class _RegisterViewState extends State<RegisterView> {
                     email: email,
                     password: password,
                   );
+
+                  if (context.mounted) {
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                      loginRoute,
+                      (route) => false,
+                    );
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(350, 50),
@@ -198,12 +208,12 @@ class _RegisterViewState extends State<RegisterView> {
               const SizedBox(height: 30.0),
               TextButton(
                 onPressed: () {
-                   Navigator.push(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => const LoginView(),
-                       ),
-                    );
+                    ),
+                  );
                 },
                 child: const Text(
                   'Already have an Account? Login Here!',

@@ -3,28 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:busbuddy/services/auth_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class UpdateInfoView extends StatefulWidget {
-  const UpdateInfoView({super.key});
+class UpdateEmailView extends StatefulWidget {
+  const UpdateEmailView({super.key});
 
   @override
-  State<StatefulWidget> createState() => _UpdateInfoViewState();
+  State<StatefulWidget> createState() => _UpdateEmailViewState();
 }
 
-class _UpdateInfoViewState extends State<UpdateInfoView> {
-  late final TextEditingController _nameController;
-  late final TextEditingController _lastNameController;
+class _UpdateEmailViewState extends State<UpdateEmailView> {
+  late final TextEditingController _emailController;
 
   @override
   void initState() {
-    _nameController = TextEditingController();
-    _lastNameController = TextEditingController();
+    _emailController = TextEditingController();
     super.initState();
   }
 
   @override
   void dispose() {
-    _nameController.dispose();
-    _lastNameController.dispose();
+    _emailController.dispose();
     super.dispose();
   }
 
@@ -56,7 +53,7 @@ class _UpdateInfoViewState extends State<UpdateInfoView> {
                 const Column(
                   children: <Widget>[
                     Text(
-                      "Update Your Name",
+                      "Update Your Email",
                       style: TextStyle(
                           fontSize: 30,
                           color: Colors.black,
@@ -66,7 +63,7 @@ class _UpdateInfoViewState extends State<UpdateInfoView> {
                       height: 20,
                     ),
                     Text(
-                      "Please enter your name as it appears on your ID or passport",
+                      "Please enter your email",
                       style: TextStyle(
                         fontSize: 18,
                       ),
@@ -77,7 +74,7 @@ class _UpdateInfoViewState extends State<UpdateInfoView> {
                 Column(
                   children: <Widget>[
                     TextField(
-                      controller: _nameController,
+                      controller: _emailController,
                       autofocus: false,
                       obscureText: true,
                       enableSuggestions: false,
@@ -110,48 +107,7 @@ class _UpdateInfoViewState extends State<UpdateInfoView> {
                           ),
                           borderRadius: BorderRadius.all(Radius.circular(20.0)),
                         ),
-                        labelText: "Enter your first name",
-                        labelStyle:
-                            TextStyle(color: Colors.black, fontSize: 18),
-                        alignLabelWithHint: true,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    TextField(
-                      controller: _lastNameController,
-                      autofocus: false,
-                      obscureText: true,
-                      enableSuggestions: false,
-                      autocorrect: false,
-                      decoration: const InputDecoration(
-                        filled: true,
-                        fillColor: Color.fromARGB(217, 219, 219, 219),
-                        contentPadding: EdgeInsets.symmetric(
-                          horizontal: 20.0,
-                          vertical: 14.0,
-                        ),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color.fromARGB(217, 219, 219, 219),
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color.fromARGB(217, 219, 219, 219),
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color.fromARGB(217, 219, 219, 219),
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                        ),
-                        labelText: "Enter your your last name",
+                        labelText: "Enter your new email",
                         labelStyle:
                             TextStyle(color: Colors.black, fontSize: 18),
                         alignLabelWithHint: true,
@@ -165,9 +121,9 @@ class _UpdateInfoViewState extends State<UpdateInfoView> {
                         foregroundColor: Colors.white,
                       ),
                       onPressed: () async {
-                        final name = _nameController.text;
+                        final email = _emailController.text;
                         try {
-                          await AuthService().updateDisplayName(name);
+                          await AuthService().updateDisplayName(email);
                         } catch (e) {
                           Fluttertoast.showToast(
                             msg: e.toString(),
@@ -180,7 +136,7 @@ class _UpdateInfoViewState extends State<UpdateInfoView> {
                         }
                       },
                       child: const Text(
-                        "Update",
+                        "Update Email",
                       ),
                     ),
                   ],

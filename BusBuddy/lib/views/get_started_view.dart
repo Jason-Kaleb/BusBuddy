@@ -1,3 +1,4 @@
+import 'package:busbuddy/constants/routes.dart';
 import 'package:flutter/material.dart';
 
 class GetStartedView extends StatefulWidget {
@@ -42,7 +43,14 @@ class _GetStartedViewState extends State<GetStartedView> {
           bottom: 70.0,
           left: 83.0,
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              if (context.mounted) {
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  registerRoute,
+                  (route) => false,
+                );
+              }
+            },
             style: ElevatedButton.styleFrom(
               minimumSize: const Size(250, 60),
               backgroundColor: const Color(0xFFFF4500),
