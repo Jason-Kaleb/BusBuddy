@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-=======
 import 'package:busbuddy/constants/routes.dart';
->>>>>>> 9edad95ab39b502cf7cf460c2975eaf1722b6a33
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -80,9 +77,8 @@ class _PersonalInfoViewState extends State<PersonalInfoView> {
                         ),
                         onPressed: () {
                           if (context.mounted) {
-                            Navigator.of(context).pushNamedAndRemoveUntil(
+                            Navigator.of(context).pushNamed(
                               mapsRoute,
-                              (route) => false,
                             );
                           }
                         },
@@ -104,6 +100,7 @@ class _PersonalInfoViewState extends State<PersonalInfoView> {
                       children: <Widget>[
                         TextField(
                           controller: _nameController,
+                          readOnly: true,
                           decoration: InputDecoration(
                             hintText: 'Name',
                             contentPadding: const EdgeInsets.symmetric(
@@ -133,6 +130,7 @@ class _PersonalInfoViewState extends State<PersonalInfoView> {
                         ),
                         TextField(
                           controller: _emailController,
+                          readOnly: true,
                           decoration: InputDecoration(
                             hintText: "Email",
                             contentPadding: const EdgeInsets.symmetric(
