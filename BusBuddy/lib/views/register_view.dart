@@ -1,5 +1,7 @@
 import 'package:busbuddy/constants/routes.dart';
-import 'package:busbuddy/services/auth_service.dart';
+import 'package:busbuddy/services/auth/auth_exceptions.dart';
+import 'package:busbuddy/services/auth/auth_service.dart';
+import 'package:busbuddy/utilities/dialogs/error_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:busbuddy/views/login_view.dart';
@@ -13,19 +15,26 @@ class RegisterView extends StatefulWidget {
 
 class _RegisterViewState extends State<RegisterView> {
   // Declare the TextEditingControllers
-  final TextEditingController _fullNameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
+  late final TextEditingController _fullName;
+  late final TextEditingController _email;
+  late final TextEditingController _password;
+  late final TextEditingController _confirmPassword;
 
-  // Dispose the controllers when no longer needed
+  @override
+  void initState() {
+    _fullName = TextEditingController();
+    _email = TextEditingController();
+    _password = TextEditingController();
+    _confirmPassword = TextEditingController();
+    super.initState();
+  }
+
   @override
   void dispose() {
-    _fullNameController.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
-    _confirmPasswordController.dispose();
+    _fullName.dispose();
+    _email.dispose();
+    _password.dispose();
+    _confirmPassword.dispose();
     super.dispose();
   }
 
@@ -37,9 +46,9 @@ class _RegisterViewState extends State<RegisterView> {
         child: Center(
           child: Column(
             children: [
-              const SizedBox(height: 50.0),
+              const SizedBox(height: 150.0),
               const Text(
-                'Welcome Onboard',
+                'Welcome Onboard, Register here!',
                 style: TextStyle(
                   fontSize: 24.0,
                   fontWeight: FontWeight.w900,
@@ -59,7 +68,7 @@ class _RegisterViewState extends State<RegisterView> {
               SizedBox(
                 width: 350,
                 child: TextField(
-                  controller: _fullNameController,
+                  controller: _fullName,
                   enableSuggestions: false,
                   autocorrect: false,
                   decoration: InputDecoration(
@@ -71,6 +80,24 @@ class _RegisterViewState extends State<RegisterView> {
                       vertical: 14.0,
                     ),
                     border: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                        color: Color.fromARGB(217, 219, 219, 219),
+                        width: 1.0,
+                      ),
+                      borderRadius: BorderRadius.circular(22.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                        color: Color.fromARGB(217, 219, 219, 219),
+                        width: 1.0,
+                      ),
+                      borderRadius: BorderRadius.circular(22.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                        color: Color.fromARGB(217, 219, 219, 219),
+                        width: 1.0,
+                      ),
                       borderRadius: BorderRadius.circular(22.0),
                     ),
                     labelText: 'Enter your full name',
@@ -85,7 +112,7 @@ class _RegisterViewState extends State<RegisterView> {
               SizedBox(
                 width: 350,
                 child: TextField(
-                  controller: _emailController,
+                  controller: _email,
                   enableSuggestions: false,
                   autocorrect: false,
                   keyboardType: TextInputType.emailAddress,
@@ -98,6 +125,24 @@ class _RegisterViewState extends State<RegisterView> {
                       vertical: 14.0,
                     ),
                     border: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                        color: Color.fromARGB(217, 219, 219, 219),
+                        width: 1.0,
+                      ),
+                      borderRadius: BorderRadius.circular(22.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                        color: Color.fromARGB(217, 219, 219, 219),
+                        width: 1.0,
+                      ),
+                      borderRadius: BorderRadius.circular(22.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                        color: Color.fromARGB(217, 219, 219, 219),
+                        width: 1.0,
+                      ),
                       borderRadius: BorderRadius.circular(22.0),
                     ),
                     labelText: 'Enter your email',
@@ -112,7 +157,7 @@ class _RegisterViewState extends State<RegisterView> {
               SizedBox(
                 width: 350,
                 child: TextField(
-                  controller: _passwordController,
+                  controller: _password,
                   obscureText: true,
                   enableSuggestions: false,
                   autocorrect: false,
@@ -125,6 +170,24 @@ class _RegisterViewState extends State<RegisterView> {
                       vertical: 14.0,
                     ),
                     border: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                        color: Color.fromARGB(217, 219, 219, 219),
+                        width: 1.0,
+                      ),
+                      borderRadius: BorderRadius.circular(22.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                        color: Color.fromARGB(217, 219, 219, 219),
+                        width: 1.0,
+                      ),
+                      borderRadius: BorderRadius.circular(22.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                        color: Color.fromARGB(217, 219, 219, 219),
+                        width: 1.0,
+                      ),
                       borderRadius: BorderRadius.circular(22.0),
                     ),
                     labelText: 'Enter your password',
@@ -139,7 +202,7 @@ class _RegisterViewState extends State<RegisterView> {
               SizedBox(
                 width: 350,
                 child: TextField(
-                  controller: _confirmPasswordController,
+                  controller: _confirmPassword,
                   obscureText: true,
                   enableSuggestions: false,
                   autocorrect: false,
@@ -152,6 +215,24 @@ class _RegisterViewState extends State<RegisterView> {
                       vertical: 14.0,
                     ),
                     border: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                        color: Color.fromARGB(217, 219, 219, 219),
+                        width: 1.0,
+                      ),
+                      borderRadius: BorderRadius.circular(22.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                        color: Color.fromARGB(217, 219, 219, 219),
+                        width: 1.0,
+                      ),
+                      borderRadius: BorderRadius.circular(22.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                        color: Color.fromARGB(217, 219, 219, 219),
+                        width: 1.0,
+                      ),
                       borderRadius: BorderRadius.circular(22.0),
                     ),
                     labelText: 'Confirm password',
@@ -165,11 +246,10 @@ class _RegisterViewState extends State<RegisterView> {
               // Register Button
               TextButton(
                 onPressed: () async {
-                  String fullName = _fullNameController.text.trim();
-                  String email = _emailController.text.trim();
-                  String password = _passwordController.text.trim();
-                  String confirmPassword =
-                      _confirmPasswordController.text.trim();
+                  String fullName = _fullName.text.trim();
+                  String email = _email.text.trim();
+                  String password = _password.text.trim();
+                  String confirmPassword = _confirmPassword.text.trim();
 
                   if (password != confirmPassword) {
                     Fluttertoast.showToast(
@@ -182,17 +262,46 @@ class _RegisterViewState extends State<RegisterView> {
                     return;
                   }
 
-                  await AuthService().signup(
-                    fullName: fullName,
-                    email: email,
-                    password: password,
-                  );
-
-                  if (context.mounted) {
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                      loginRoute,
-                      (route) => false,
+                  try {
+                    await AuthService.firebase().createUser(
+                      fullName: fullName,
+                      email: email,
+                      password: password,
                     );
+                    AuthService.firebase().sendEmailVerification();
+                    if (context.mounted) {
+                      Navigator.of(context).pushNamed(
+                        verifyEmailRoute,
+                      );
+                    }
+                  } on EmailAlreadyInUseAuthException {
+                    if (context.mounted) {
+                      await showErrorDialog(
+                        context,
+                        "Email already in use",
+                      );
+                    }
+                  } on InvalidEmailAuthException {
+                    if (context.mounted) {
+                      await showErrorDialog(
+                        context,
+                        "Invalid email",
+                      );
+                    }
+                  } on WeakPasswordAuthException {
+                    if (context.mounted) {
+                      await showErrorDialog(
+                        context,
+                        "Password should be at least 6 characters",
+                      );
+                    }
+                  } on GenericAuthException {
+                    if (context.mounted) {
+                      await showErrorDialog(
+                        context,
+                        "Something went wrong",
+                      );
+                    }
                   }
                 },
                 style: ElevatedButton.styleFrom(

@@ -1,8 +1,34 @@
 import 'package:busbuddy/constants/routes.dart';
+import 'package:busbuddy/services/auth/user_service.dart';
 import 'package:flutter/material.dart';
 
-class CustomDrawer extends StatelessWidget {
+class CustomDrawer extends StatefulWidget {
   const CustomDrawer({super.key});
+
+  @override
+  _CustomDrawerState createState() => _CustomDrawerState();
+}
+
+class _CustomDrawerState extends State<CustomDrawer> {
+  String _userName = 'Loading...'; // Default value
+  String _userEmail = 'Loading...'; // Default value
+  final UserService _userService = UserService();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    String name = await _userService.getUserName();
+    String email = await _userService.getUserEmail();
+
+    setState(() {
+      _userName = name;
+      _userEmail = email;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,30 +51,30 @@ class CustomDrawer extends StatelessWidget {
                   (route) => false,
                 );
               },
-              child: const UserAccountsDrawerHeader(
+              child: UserAccountsDrawerHeader(
                 accountName: Text(
-                  "Gojo",
-                  style: TextStyle(
+                  _userName,
+                  style: const TextStyle(
                     fontSize: 17,
                     color: Colors.black,
                   ),
                 ),
                 accountEmail: Text(
-                  "Satori@gmail.com",
-                  style: TextStyle(
+                  _userEmail,
+                  style: const TextStyle(
                     fontSize: 12,
                     color: Colors.black,
                   ),
                 ),
-                currentAccountPictureSize: Size.square(50),
-                currentAccountPicture: CircleAvatar(
+                currentAccountPictureSize: const Size.square(50),
+                currentAccountPicture: const CircleAvatar(
                   backgroundColor: Color.fromARGB(255, 240, 239, 239),
                   child: Icon(
                     Icons.person,
                     color: Color.fromARGB(255, 141, 140, 140),
                   ),
                 ),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.white,
                 ),
               ),
