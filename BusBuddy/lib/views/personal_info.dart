@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-=======
 import 'package:busbuddy/constants/routes.dart';
->>>>>>> 9edad95ab39b502cf7cf460c2975eaf1722b6a33
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -55,7 +52,7 @@ class _PersonalInfoViewState extends State<PersonalInfoView> {
         children: <Widget>[
           Positioned(
             top:
-                -100.0, // Adjust these values to move the image outside the SafeArea
+            -100.0, // Adjust these values to move the image outside the SafeArea
             left: -125.0, // Adjust left positioning
             child: Image.asset(
               "assets/images/Circles.png", // Replace with your image path
