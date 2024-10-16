@@ -1,5 +1,6 @@
+import 'package:busbuddy/constants/routes.dart';
 import 'package:busbuddy/services/auth_service.dart';
-import  'package:busbuddy/views/register_view.dart';
+import 'package:busbuddy/views/register_view.dart';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -43,7 +44,8 @@ class _LoginViewState extends State<LoginView> {
               ),
               const SizedBox(height: 30.0),
               SizedBox(
-                child: Image.asset("assets/images/undraw_Mobile_login_re_9ntv.png"),
+                child: Image.asset(
+                    "assets/images/undraw_Mobile_login_re_9ntv.png"),
               ),
               const SizedBox(height: 32.0),
               SizedBox(
@@ -87,7 +89,8 @@ class _LoginViewState extends State<LoginView> {
                       borderRadius: BorderRadius.circular(22.0),
                     ),
                     labelText: 'Enter your email',
-                    labelStyle: const TextStyle(color: Colors.black, fontSize: 18),
+                    labelStyle:
+                        const TextStyle(color: Colors.black, fontSize: 18),
                     alignLabelWithHint: true,
                   ),
                 ),
@@ -134,7 +137,8 @@ class _LoginViewState extends State<LoginView> {
                       borderRadius: BorderRadius.circular(22.0),
                     ),
                     labelText: 'Enter your password',
-                    labelStyle: const TextStyle(color: Colors.black, fontSize: 18),
+                    labelStyle:
+                        const TextStyle(color: Colors.black, fontSize: 18),
                     alignLabelWithHint: true,
                   ),
                 ),
@@ -159,9 +163,16 @@ class _LoginViewState extends State<LoginView> {
                   // Perform sign-in operation
                   try {
                     await AuthService().signin(
-                        email: email, password:
-                        password,
-                        context: context);
+                      email: email,
+                      password: password,
+                      context: context,
+                    );
+                    if (context.mounted) {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                        mapsRoute,
+                        (route) => false,
+                      );
+                    }
                   } catch (e) {
                     Fluttertoast.showToast(
                       msg: e.toString(),
@@ -186,12 +197,12 @@ class _LoginViewState extends State<LoginView> {
               const SizedBox(height: 10.0),
               TextButton(
                 onPressed: () {
-                   Navigator.push(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => const RegisterView(),
-                       ),
-                    );
+                    ),
+                  );
                 },
                 child: const Text(
                   'Don\'t have an account? Sign up!',
