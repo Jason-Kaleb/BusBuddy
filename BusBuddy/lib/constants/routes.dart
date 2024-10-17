@@ -6,3 +6,4 @@ const updateRoute = '/update/';
 const updateEmailRoute = '/updateEmail/';
 const verifyEmailRoute = '/verifyEmail/';
 const profileRoute = '/profile/';
+const deleteRoute = '/delete/';

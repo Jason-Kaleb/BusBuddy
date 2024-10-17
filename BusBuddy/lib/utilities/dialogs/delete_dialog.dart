@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 Future<bool> showDeleteDialog(BuildContext context) {
   return showGenericDialog(
     context: context,
-    title: 'Delete',
-    content: 'Are you sure you want to delete this item?',
+    title: 'Delete Account',
+    content: 'Are you sure you want to delete your account?',
     optionsBuilder: () => {
       'Cancel': false,
       'Yes': true,

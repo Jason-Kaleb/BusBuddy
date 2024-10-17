@@ -1,19 +1,6 @@
 import 'package:busbuddy/constants/routes.dart';
 import 'package:busbuddy/services/auth/auth_service.dart';
-<<<<<<< HEAD
-import 'package:busbuddy/views/profile_view.dart';
-import 'package:busbuddy/views/verify_email_view.dart';
-import 'package:busbuddy/views/login_view.dart';
-import 'package:busbuddy/views/map_view.dart';
-import 'package:busbuddy/views/personal_info.dart';
-import 'package:busbuddy/views/register_view.dart';
-import 'package:busbuddy/views/update_email_view.dart';
-import 'package:busbuddy/views/update_info.dart';
 import 'package:busbuddy/views/delete_view.dart';
-import 'package:busbuddy/views/payment_view.dart';
-import 'package:flutter/material.dart';
-
-=======
 import 'package:busbuddy/views/personal_info.dart';
 import 'package:busbuddy/views/profile_view.dart';
 import 'package:busbuddy/views/register_view.dart';
@@ -23,7 +10,6 @@ import 'package:busbuddy/views/verify_email_view.dart';
 import 'package:busbuddy/views/login_view.dart';
 import 'package:busbuddy/views/map_view.dart';
 import 'package:flutter/material.dart';
->>>>>>> e2152e1a0d4510ca2e72ca5ed6d256c2ee04f033
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,6 +38,7 @@ class MyApp extends StatelessWidget {
         updateEmailRoute: (context) => const UpdateEmailView(),
         verifyEmailRoute: (context) => const VerifyEmailView(),
         profileRoute: (context) => const ProfileView(),
+        deleteRoute: (context) => const DeleteView(),
       },
     );
   }

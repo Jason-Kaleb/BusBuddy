@@ -1,5 +1,6 @@
+import 'package:busbuddy/constants/routes.dart';
+import 'package:busbuddy/utilities/dialogs/delete_dialog.dart';
 import 'package:flutter/material.dart';
-
 
 class DeleteView extends StatefulWidget {
   const DeleteView({super.key});
@@ -45,13 +46,13 @@ class _DeleteViewState extends State<DeleteView> {
                 ),
                 child: const Column(
                   children: [
-                     Icon(
+                    Icon(
                       Icons.warning_amber_rounded,
                       color: Color(0xFFFF4500),
                       size: 48,
                     ),
-                     SizedBox(height: 16),
-                     Text(
+                    SizedBox(height: 16),
+                    Text(
                       'We are really sorry to see you go 😢',
                       style: TextStyle(
                         fontSize: 18,
@@ -60,8 +61,8 @@ class _DeleteViewState extends State<DeleteView> {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                     SizedBox(height: 12),
-                     Text(
+                    SizedBox(height: 12),
+                    Text(
                       'Are you sure you want to delete your account with us? Once you confirm, all your data will be permanently deleted.',
                       style: TextStyle(
                         fontSize: 16,
@@ -74,7 +75,16 @@ class _DeleteViewState extends State<DeleteView> {
               ),
               const Spacer(),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
+                  final shouldDelete = await showDeleteDialog(context);
+                  if (shouldDelete) {
+                    if (context.mounted) {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                        loginRoute,
+                        (_) => false,
+                      );
+                    }
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFFF4500),
