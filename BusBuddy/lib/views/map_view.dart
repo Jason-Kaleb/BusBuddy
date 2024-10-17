@@ -175,7 +175,7 @@ class _MapViewState extends State<MapView> {
     PolylineId id = const PolylineId("poly");
     Polyline polyline = Polyline(
       polylineId: id,
-      color: Colors.blue,
+      color: Colors.deepOrange,
       points: polylineCoordinates,
       width: 8,
     );

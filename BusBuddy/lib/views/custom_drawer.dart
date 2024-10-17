@@ -10,8 +10,8 @@ class CustomDrawer extends StatefulWidget {
 }
 
 class _CustomDrawerState extends State<CustomDrawer> {
-  String _userName = 'Loading...'; // Default value
-  String _userEmail = 'Loading...'; // Default value
+  String _userName = 'Loading...';
+  String _userEmail = 'Loading...';
   final UserService _userService = UserService();
 
   @override
@@ -24,10 +24,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
     String name = await _userService.getUserName();
     String email = await _userService.getUserEmail();
 
-    setState(() {
-      _userName = name;
-      _userEmail = email;
-    });
+    if (context.mounted) {
+      setState(() {
+        _userName = name;
+        _userEmail = email;
+      });
+    }
   }
 
   @override
@@ -47,7 +49,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
             child: InkWell(
               onTap: () {
                 Navigator.of(context).pushNamedAndRemoveUntil(
-                  personalRoute,
+                  profileRoute,
                   (route) => false,
                 );
               },
