@@ -23,7 +23,7 @@ class _MapViewState extends State<MapView> {
 
   static const LatLng _pGooglePlex = LatLng(26.2894, 27.8956);
   static const LatLng _pGoudStreet = LatLng(26.2965, 27.8960);
-  LatLng? _currentPosition = null;
+  LatLng? _currentPosition;
 
   Map<PolylineId, Polyline> polylines = {};
 
@@ -105,32 +105,32 @@ class _MapViewState extends State<MapView> {
 
   Future<void> _cameraToPosition(LatLng pos) async {
     final GoogleMapController controller = await _mapController.future;
-    CameraPosition _newCameraPosition = CameraPosition(
+    CameraPosition newCameraPosition = CameraPosition(
       target: pos,
       zoom: 13,
     );
     await controller.animateCamera(
-      CameraUpdate.newCameraPosition(_newCameraPosition),
+      CameraUpdate.newCameraPosition(newCameraPosition),
     );
   }
 
   Future<void> getLocationUpdates() async {
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
+    bool serviceEnabled;
+    PermissionStatus permissionGranted;
 
-    _serviceEnabled = await _locationController.serviceEnabled();
+    serviceEnabled = await _locationController.serviceEnabled();
 
-    if (_serviceEnabled) {
-      _serviceEnabled = await _locationController.requestService();
+    if (serviceEnabled) {
+      serviceEnabled = await _locationController.requestService();
     } else {
       return;
     }
 
-    _permissionGranted = await _locationController.hasPermission();
+    permissionGranted = await _locationController.hasPermission();
 
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await _locationController.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await _locationController.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
         return;
       }
     }
@@ -160,11 +160,11 @@ class _MapViewState extends State<MapView> {
       ),
     );
     if (result.points.isNotEmpty) {
-      result.points.forEach((PointLatLng point) {
+      for (var point in result.points) {
         polylineCoordinates.add(
           LatLng(point.latitude, point.longitude),
         );
-      });
+      }
     } else {
       print(result.errorMessage);
     }
@@ -172,10 +172,10 @@ class _MapViewState extends State<MapView> {
   }
 
   void generatePolylineFromPoints(List<LatLng> polylineCoordinates) async {
-    PolylineId id = PolylineId("poly");
+    PolylineId id = const PolylineId("poly");
     Polyline polyline = Polyline(
       polylineId: id,
-      color: Colors.blue,
+      color: Colors.deepOrange,
       points: polylineCoordinates,
       width: 8,
     );

@@ -1,6 +1,10 @@
-import 'package:busbuddy/services/auth_service.dart';
+import 'package:busbuddy/constants/routes.dart';
+import 'package:busbuddy/services/auth/auth_exceptions.dart';
+import 'package:busbuddy/services/auth/auth_service.dart';
+import 'package:busbuddy/utilities/dialogs/error_dialog.dart';
+import 'package:busbuddy/views/register_view.dart';
+
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -10,13 +14,20 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  late final TextEditingController _email;
+  late final TextEditingController _password;
+
+  @override
+  void initState() {
+    _email = TextEditingController();
+    _password = TextEditingController();
+    super.initState();
+  }
 
   @override
   void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
+    _email.dispose();
+    _password.dispose();
     super.dispose();
   }
 
@@ -41,13 +52,14 @@ class _LoginViewState extends State<LoginView> {
               ),
               const SizedBox(height: 30.0),
               SizedBox(
-                child: Image.asset("assets/images/undraw_Mobile_login_re_9ntv.png"),
+                child: Image.asset(
+                    "assets/images/undraw_Mobile_login_re_9ntv.png"),
               ),
               const SizedBox(height: 32.0),
               SizedBox(
                 width: 350,
                 child: TextField(
-                  controller: _emailController, // Use the controller here
+                  controller: _email, // Use the controller here
                   autofocus: false,
                   enableSuggestions: false,
                   autocorrect: false,
@@ -85,7 +97,8 @@ class _LoginViewState extends State<LoginView> {
                       borderRadius: BorderRadius.circular(22.0),
                     ),
                     labelText: 'Enter your email',
-                    labelStyle: const TextStyle(color: Colors.black, fontSize: 18),
+                    labelStyle:
+                        const TextStyle(color: Colors.black, fontSize: 18),
                     alignLabelWithHint: true,
                   ),
                 ),
@@ -94,7 +107,7 @@ class _LoginViewState extends State<LoginView> {
               SizedBox(
                 width: 350,
                 child: TextField(
-                  controller: _passwordController, // Use the controller here
+                  controller: _password, // Use the controller here
                   autofocus: false,
                   obscureText: true,
                   enableSuggestions: false,
@@ -132,7 +145,8 @@ class _LoginViewState extends State<LoginView> {
                       borderRadius: BorderRadius.circular(22.0),
                     ),
                     labelText: 'Enter your password',
-                    labelStyle: const TextStyle(color: Colors.black, fontSize: 18),
+                    labelStyle:
+                        const TextStyle(color: Colors.black, fontSize: 18),
                     alignLabelWithHint: true,
                   ),
                 ),
@@ -151,24 +165,51 @@ class _LoginViewState extends State<LoginView> {
               const SizedBox(height: 10.0),
               ElevatedButton(
                 onPressed: () async {
-                  String email = _emailController.text;
-                  String password = _passwordController.text;
+                  String email = _email.text;
+                  String password = _password.text;
 
-                  // Perform sign-in operation
                   try {
-                    await AuthService().signin(
-                        email: email, password:
-                        password,
-                        context: context);
-                  } catch (e) {
-                    Fluttertoast.showToast(
-                      msg: e.toString(),
-                      toastLength: Toast.LENGTH_LONG,
-                      gravity: ToastGravity.SNACKBAR,
-                      backgroundColor: Colors.black54,
-                      textColor: Colors.white,
-                      fontSize: 14.0,
+                    await AuthService.firebase().logIn(
+                      email: email,
+                      password: password,
                     );
+                    final user = AuthService.firebase().currentUser;
+                    if (user?.isEmailVerified ?? false) {
+                      if (context.mounted) {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                          mapsRoute,
+                          (route) => false,
+                        );
+                      }
+                    } else {
+                      if (context.mounted) {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                          verifyEmailRoute,
+                          (route) => false,
+                        );
+                      }
+                    }
+                  } on UserNotFoundAuthException {
+                    if (context.mounted) {
+                      await showErrorDialog(
+                        context,
+                        'User not found',
+                      );
+                    }
+                  } on WrongPasswordAuthException {
+                    if (context.mounted) {
+                      await showErrorDialog(
+                        context,
+                        'Wrong password',
+                      );
+                    }
+                  } on GenericAuthException {
+                    if (context.mounted) {
+                      await showErrorDialog(
+                        context,
+                        'Authentication Error',
+                      );
+                    }
                   }
                 },
                 style: ElevatedButton.styleFrom(
@@ -183,7 +224,14 @@ class _LoginViewState extends State<LoginView> {
               ),
               const SizedBox(height: 10.0),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const RegisterView(),
+                    ),
+                  );
+                },
                 child: const Text(
                   'Don\'t have an account? Sign up!',
                   style: TextStyle(

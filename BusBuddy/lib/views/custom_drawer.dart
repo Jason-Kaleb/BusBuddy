@@ -1,7 +1,36 @@
+import 'package:busbuddy/constants/routes.dart';
+import 'package:busbuddy/services/auth/user_service.dart';
 import 'package:flutter/material.dart';
 
-class CustomDrawer extends StatelessWidget {
+class CustomDrawer extends StatefulWidget {
   const CustomDrawer({super.key});
+
+  @override
+  _CustomDrawerState createState() => _CustomDrawerState();
+}
+
+class _CustomDrawerState extends State<CustomDrawer> {
+  String _userName = 'Loading...';
+  String _userEmail = 'Loading...';
+  final UserService _userService = UserService();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    String name = await _userService.getUserName();
+    String email = await _userService.getUserEmail();
+
+    if (context.mounted) {
+      setState(() {
+        _userName = name;
+        _userEmail = email;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -10,139 +39,94 @@ class CustomDrawer extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          const DrawerHeader(
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 0.0),
+            padding: const EdgeInsets.all(16.0),
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(
-                Radius.circular(30),
-              ),
+              color: const Color.fromARGB(255, 255, 255, 255),
+              borderRadius: BorderRadius.circular(20.0),
             ),
-            child: UserAccountsDrawerHeader(
-              accountName: Text(
-                "Gojo",
-                style: TextStyle(
-                  fontSize: 17,
-                  color: Colors.black,
+            child: InkWell(
+              onTap: () {
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  profileRoute,
+                  (route) => false,
+                );
+              },
+              splashColor: const Color.fromARGB(255, 122, 122, 122),
+              highlightColor: const Color.fromARGB(255, 122, 122, 122),
+              child: UserAccountsDrawerHeader(
+                accountName: Text(
+                  _userName,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    color: Colors.black,
+                  ),
                 ),
-              ),
-              accountEmail: Text(
-                "Satori@gmail.com",
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.black,
+                accountEmail: Text(
+                  _userEmail,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.black,
+                  ),
                 ),
-              ),
-              currentAccountPictureSize: Size.square(50),
-              currentAccountPicture: CircleAvatar(
-                backgroundColor: Color.fromARGB(255, 240, 239, 239),
-                child: Icon(
-                  Icons.person,
-                  color: Color.fromARGB(255, 141, 140, 140),
+                currentAccountPictureSize: const Size.square(50),
+                currentAccountPicture: const CircleAvatar(
+                  backgroundColor: Color.fromARGB(255, 240, 239, 239),
+                  child: Icon(
+                    Icons.person,
+                    color: Color.fromARGB(255, 141, 140, 140),
+                  ),
                 ),
-              ),
-              decoration: BoxDecoration(
-                color: Colors.white,
+                decoration: const BoxDecoration(
+                  color: Colors.transparent,
+                ),
               ),
             ),
           ),
-          const SizedBox(height: 10),
-          ListTile(
-            leading: const Icon(Icons.star, color: Colors.grey),
-            title: const Text('Points'),
-            onTap: () {
-              // Handle Points tap
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.support_agent, color: Colors.grey),
-            title: const Text('Support'),
-            onTap: () {
-              // Handle Support tap
-            },
-          ),
-          ListTile(
-            leading: const Icon(
-              Icons.info_outline_rounded,
-              color: Colors.grey,
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 20.0),
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 255, 255, 255),
+              borderRadius: BorderRadius.circular(20.0),
             ),
-            title: const Text('About'),
-            onTap: () {
-              // Handle About tap
-            },
+            child: Column(
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.payment_outlined,
+                      color: Color.fromARGB(255, 0, 0, 0)),
+                  title: const Text('Payment'),
+                  onTap: () {},
+                ),
+                const Divider(),
+                ListTile(
+                  leading: const Icon(Icons.support_agent,
+                      color: Color.fromARGB(255, 0, 0, 0)),
+                  title: const Text('Support'),
+                  onTap: () {},
+                ),
+                const Divider(),
+                ListTile(
+                  leading: const Icon(Icons.info_outline_rounded,
+                      color: Color.fromARGB(255, 0, 0, 0)),
+                  title: const Text('About'),
+                  onTap: () {},
+                ),
+              ],
+            ),
+          ),
+          Container(
+            height: 352,
+            margin: const EdgeInsets.symmetric(horizontal: 0.0),
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 255, 255, 255),
+              borderRadius: BorderRadius.circular(20.0),
+            ),
           ),
         ],
       ),
     );
   }
 }
-
-
-// class CustomDrawer extends StatelessWidget {
-//   const CustomDrawer({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Drawer(
-//       child: ListView(
-//         children: const [
-//           DrawerHeader(
-//             decoration: BoxDecoration(
-//               color: Colors.white,
-//               borderRadius: BorderRadius.all(
-//                 Radius.circular(30),
-//               ),
-//             ),
-//             child: UserAccountsDrawerHeader(
-//               accountName: Text(
-//                 "Gojo",
-//                 style: TextStyle(
-//                   fontSize: 17,
-//                   color: Colors.black,
-//                 ),
-//               ),
-//               accountEmail: Text(
-//                 "Satori@gmail.com",
-//                 style: TextStyle(
-//                   fontSize: 12,
-//                   color: Colors.black,
-//                 ),
-//               ),
-//               currentAccountPictureSize: Size.square(50),
-//               currentAccountPicture: CircleAvatar(
-//                 backgroundColor: Color.fromARGB(255, 240, 239, 239),
-//                 child: Icon(
-//                   Icons.person,
-//                   color: Color.fromARGB(255, 141, 140, 140),
-//                 ),
-//               ),
-//               decoration: BoxDecoration(
-//                 color: Colors.white,
-//               ),
-//             ),
-//           ),
-//           SizedBox(
-//             height: 10,
-//           ),
-//           ListTile(
-//             title: Text('Testing 1'),
-//           ),
-//           Divider(
-//             thickness: 2,
-//           ),
-//           ListTile(
-//             title: Text('Testing 22'),
-//           ),
-//           Divider(
-//             thickness: 2,
-//           ),
-//           ListTile(
-//             title: Text('Testing 3'),
-//           ),
-//           Divider(
-//             thickness: 2,
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
