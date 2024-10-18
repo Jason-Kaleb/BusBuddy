@@ -1,4 +1,4 @@
-// import 'package:busbuddy/views/get_started_view.dart';
+import 'package:busbuddy/views/get_started_view.dart';
 import 'package:busbuddy/views/login_view.dart';
 import 'package:busbuddy/views/map_view.dart';
 import 'package:busbuddy/views/register_view.dart';
