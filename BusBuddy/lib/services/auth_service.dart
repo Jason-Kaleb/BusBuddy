@@ -10,14 +10,14 @@ class AuthService {
   }) async {
     try {
       // Create a user with email and password
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
       // Update the user's display name with the full name
       await userCredential.user?.updateDisplayName(fullName);
-
     } on FirebaseAuthException catch (e) {
       String message = '';
       if (e.code == 'weak-password') {
@@ -44,24 +44,14 @@ class AuthService {
       );
     }
   }
-  Future<void> signin({
-    required String email,
-    required String password,
-    required BuildContext context
-    //required String fullName,
-  }) async {
-    try {
-      // Create a user with email and password
-      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
 
-      // Update the user's display name with the full name
-
-
-
-    } on FirebaseAuthException catch (e) {
+  Future<void> signin(
+      {required String email,
+      required String password,
+      required BuildContext context
+      //required String fullName,
+      }) async {
+    try {} on FirebaseAuthException catch (e) {
       String message = '';
       if (e.code == 'user-not-found') {
         message = 'No user found for that email';
@@ -87,18 +77,19 @@ class AuthService {
       );
     }
   }
-  Future <void> updateDisplayName(String displayName) async{
+
+  Future<void> updateDisplayName(String displayName) async {
     try {
       await FirebaseAuth.instance.currentUser!.updateDisplayName(displayName);
-      } on FirebaseAuthException {
-        Fluttertoast.showToast(
-          msg: 'Failed to update display name',
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.black54,
-          textColor: Colors.white,
-          fontSize: 14.0,
-          );
-      }
+    } on FirebaseAuthException {
+      Fluttertoast.showToast(
+        msg: 'Failed to update display name',
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.black54,
+        textColor: Colors.white,
+        fontSize: 14.0,
+      );
+    }
   }
 }

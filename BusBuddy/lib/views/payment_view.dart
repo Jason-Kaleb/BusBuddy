@@ -76,32 +76,18 @@ class _PaymentViewState extends State<PaymentView> {
                     ),
                     const SizedBox(height: 8),
                     const Text(
-                      '0',
+                      '0 Points',
                       style: TextStyle(
-                        fontSize: 30.0,
+                        fontSize: 24.0,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      'Bus Points is not available with this payment method',
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        color: Colors.black54,
-                      ),
-                    ),
-                    const SizedBox(height: 20.0),
+                    const SizedBox(height: 8.0),
                     ListTile(
                       leading:
                           const Icon(Icons.info_outline, color: Colors.black),
                       title: const Text('What is Bus Points?'),
-                      onTap: () {},
-                    ),
-                    const Divider(),
-                    ListTile(
-                      leading: const Icon(Icons.history, color: Colors.black),
-                      title: const Text('See Bolt balance transactions'),
                       onTap: () {},
                     ),
                   ],

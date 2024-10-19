@@ -70,7 +70,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     color: Colors.black,
                   ),
                 ),
-                currentAccountPictureSize: const Size.square(50),
                 currentAccountPicture: const CircleAvatar(
                   backgroundColor: Color.fromARGB(255, 240, 239, 239),
                   child: Icon(
