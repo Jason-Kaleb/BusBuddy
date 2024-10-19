@@ -42,12 +42,6 @@ class _PersonalInfoViewState extends State<PersonalInfoView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      // appBar: AppBar(
-      //   leading: const BackButton(
-      //     color: Colors.black,
-      //     onPressed: null,
-      //   ),
-      // ),
       body: Stack(
         children: <Widget>[
           Positioned(

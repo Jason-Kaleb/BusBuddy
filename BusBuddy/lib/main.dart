@@ -1,9 +1,12 @@
 import 'package:busbuddy/constants/routes.dart';
 import 'package:busbuddy/services/auth/auth_service.dart';
+import 'package:busbuddy/views/card_details_view.dart';
 import 'package:busbuddy/views/delete_view.dart';
+import 'package:busbuddy/views/payment_view.dart';
 import 'package:busbuddy/views/personal_info.dart';
 import 'package:busbuddy/views/profile_view.dart';
 import 'package:busbuddy/views/register_view.dart';
+import 'package:busbuddy/views/reset_password_view.dart';
 import 'package:busbuddy/views/update_email_view.dart';
 import 'package:busbuddy/views/update_info.dart';
 import 'package:busbuddy/views/verify_email_view.dart';
@@ -39,6 +42,9 @@ class MyApp extends StatelessWidget {
         verifyEmailRoute: (context) => const VerifyEmailView(),
         profileRoute: (context) => const ProfileView(),
         deleteRoute: (context) => const DeleteView(),
+        paymentRoute: (context) => const PaymentView(),
+        cardRoute: (context) => const CardDetailsView(),
+        forgotPasswordRoute: (context) => const ForgotPasswordView(),
       },
     );
   }
@@ -50,24 +56,25 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: AuthService.firebase().initialize(),
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.done:
-              final user = AuthService.firebase().currentUser;
+      future: AuthService.firebase().initialize(),
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.done:
+            final user = AuthService.firebase().currentUser;
 
-              if (user != null) {
-                if (user.isEmailVerified) {
-                  return const MapView();
-                } else {
-                  return const VerifyEmailView();
-                }
+            if (user != null) {
+              if (user.isEmailVerified) {
+                return const MapView();
               } else {
-                return const LoginView();
+                return const VerifyEmailView();
               }
-            default:
-              return const CircularProgressIndicator();
-          }
-        });
+            } else {
+              return const LoginView();
+            }
+          default:
+            return const CircularProgressIndicator();
+        }
+      },
+    );
   }
 }

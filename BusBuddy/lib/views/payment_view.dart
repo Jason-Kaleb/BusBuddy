@@ -1,3 +1,4 @@
+import 'package:busbuddy/constants/routes.dart';
 import 'package:flutter/material.dart';
 
 class PaymentView extends StatefulWidget {
@@ -11,6 +12,7 @@ class _PaymentViewState extends State<PaymentView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Container(
           color: Colors.grey.shade300,
@@ -23,7 +25,8 @@ class _PaymentViewState extends State<PaymentView> {
                     bottom: Radius.circular(20),
                   ),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 20.0, vertical: 10.0),
                 child: Column(
                   children: [
                     Row(
@@ -35,7 +38,9 @@ class _PaymentViewState extends State<PaymentView> {
                             color: Colors.black,
                             size: 30,
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
                         ),
                         const Text(
                           'Payment',
@@ -49,16 +54,15 @@ class _PaymentViewState extends State<PaymentView> {
                   ],
                 ),
               ),
-              const SizedBox(height: 10), 
+              const SizedBox(height: 10),
               Container(
                 decoration: const BoxDecoration(
-                  color: Colors.white, 
+                  color: Colors.white,
                   borderRadius: BorderRadius.vertical(
-                    bottom: Radius.circular(20),
-                    top: Radius.circular(20)
-                  ),
+                      bottom: Radius.circular(20), top: Radius.circular(20)),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 20.0, vertical: 20.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -72,7 +76,7 @@ class _PaymentViewState extends State<PaymentView> {
                     ),
                     const SizedBox(height: 8),
                     const Text(
-                      'R0',
+                      '0',
                       style: TextStyle(
                         fontSize: 30.0,
                         fontWeight: FontWeight.bold,
@@ -89,7 +93,8 @@ class _PaymentViewState extends State<PaymentView> {
                     ),
                     const SizedBox(height: 20.0),
                     ListTile(
-                      leading: const Icon(Icons.info_outline, color: Colors.black),
+                      leading:
+                          const Icon(Icons.info_outline, color: Colors.black),
                       title: const Text('What is Bus Points?'),
                       onTap: () {},
                     ),
@@ -125,13 +130,14 @@ class _PaymentViewState extends State<PaymentView> {
                       const SizedBox(height: 20.0),
                       ListTile(
                         leading: const Icon(Icons.add, color: Colors.black),
-                        title: const Text('Add debit/credit card',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold
+                        title: const Text(
+                          'Add debit/credit card',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                        ),
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.of(context).pushNamed(cardRoute);
+                        },
                       ),
                     ],
                   ),

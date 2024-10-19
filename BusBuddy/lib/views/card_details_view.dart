@@ -26,7 +26,9 @@ class _CardDetailsViewState extends State<CardDetailsView> {
                   children: [
                     IconButton(
                       icon: const Icon(Icons.arrow_back_ios_new_rounded),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
                     ),
                     const Expanded(
                       child: Text(
@@ -44,11 +46,11 @@ class _CardDetailsViewState extends State<CardDetailsView> {
                 const Text(
                   'Card Number',
                   style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    color: Colors.black,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
                   ),
+                ),
                 const SizedBox(height: 8.0),
                 const TextField(
                   keyboardType: TextInputType.number,
@@ -77,21 +79,21 @@ class _CardDetailsViewState extends State<CardDetailsView> {
                           Text(
                             "Expiration Date",
                             style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                          ),
+                              color: Colors.black,
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
                             ),
+                          ),
                           SizedBox(height: 8.0),
                           TextField(
                             keyboardType: TextInputType.datetime,
                             decoration: InputDecoration(
                               hintText: 'MM/YY',
                               hintStyle: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.w400,
-                            ),
+                                color: Colors.grey,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.w400,
+                              ),
                               contentPadding: EdgeInsets.symmetric(
                                 horizontal: 20.0,
                                 vertical: 14.0,
@@ -105,7 +107,7 @@ class _CardDetailsViewState extends State<CardDetailsView> {
                         ],
                       ),
                     ),
-                    SizedBox(width: 20.0), 
+                    SizedBox(width: 20.0),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,11 +115,11 @@ class _CardDetailsViewState extends State<CardDetailsView> {
                           Text(
                             "CVV",
                             style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                          ),
+                              color: Colors.black,
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
                             ),
+                          ),
                           SizedBox(height: 8.0),
                           TextField(
                             keyboardType: TextInputType.number,
@@ -147,11 +149,11 @@ class _CardDetailsViewState extends State<CardDetailsView> {
                 const Text(
                   "Cardholder name",
                   style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    color: Colors.black,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
                   ),
+                ),
                 const SizedBox(height: 8.0),
                 const TextField(
                   decoration: InputDecoration(
@@ -179,9 +181,7 @@ class _CardDetailsViewState extends State<CardDetailsView> {
                       child: Text(
                         "Save card details for next time?",
                         style: TextStyle(
-                          fontSize: 19.0,
-                          fontWeight: FontWeight.w500
-                        ),
+                            fontSize: 19.0, fontWeight: FontWeight.w500),
                       ),
                     ),
                     Expanded(
@@ -197,8 +197,9 @@ class _CardDetailsViewState extends State<CardDetailsView> {
                           },
                           activeColor: const Color(0xFFFF4500),
                           inactiveThumbColor: Colors.white,
-                          inactiveTrackColor: const Color.fromARGB(244, 245, 243, 237),
-                          trackOutlineColor:const WidgetStatePropertyAll(
+                          inactiveTrackColor:
+                              const Color.fromARGB(244, 245, 243, 237),
+                          trackOutlineColor: const WidgetStatePropertyAll(
                             Color.fromARGB(255, 255, 255, 255),
                           ),
                         ),

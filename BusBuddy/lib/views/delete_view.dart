@@ -1,5 +1,9 @@
 import 'package:busbuddy/constants/routes.dart';
-import 'package:busbuddy/utilities/dialogs/delete_dialog.dart';
+import 'package:busbuddy/services/auth/auth_exceptions.dart';
+import 'package:busbuddy/services/auth/auth_service.dart';
+import 'package:busbuddy/utilities/dialogs/delete_with_password_dialog.dart';
+import 'package:busbuddy/utilities/dialogs/error_dialog.dart';
+import 'package:busbuddy/utilities/dialogs/password_not_entered_dialog.dart';
 import 'package:flutter/material.dart';
 
 class DeleteView extends StatefulWidget {
@@ -76,12 +80,13 @@ class _DeleteViewState extends State<DeleteView> {
               const Spacer(),
               ElevatedButton(
                 onPressed: () async {
-                  final shouldDelete = await showDeleteDialog(context);
-                  if (shouldDelete) {
+                  try {
+                    await onDeleteUserButtonPressed(context);
+                  } on FailedToDeleteUserException {
                     if (context.mounted) {
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                        loginRoute,
-                        (_) => false,
+                      await showErrorDialog(
+                        context,
+                        'Unable to delete user',
                       );
                     }
                   }
@@ -108,5 +113,33 @@ class _DeleteViewState extends State<DeleteView> {
         ),
       ),
     );
+  }
+}
+
+Future<void> onDeleteUserButtonPressed(BuildContext context) async {
+  try {
+    final password = await showPasswordPrompt(context);
+
+    if (password != null && password.isNotEmpty) {
+      await AuthService.firebase().deleteUser(password: password);
+
+      if (context.mounted) {
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          loginRoute,
+          (_) => false,
+        );
+      }
+    } else {
+      if (context.mounted) {
+        showPasswordNotEnteredDialog(context, "No password was entered");
+      }
+    }
+  } on WrongPasswordAuthException {
+    if (context.mounted) {
+      await showErrorDialog(
+        context,
+        'Incorrect password, Please enter your correct password to delete your account.',
+      );
+    }
   }
 }

@@ -153,7 +153,9 @@ class _LoginViewState extends State<LoginView> {
               ),
               const SizedBox(height: 10.0),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).pushNamed(forgotPasswordRoute);
+                },
                 child: const Text(
                   'Forgot password?',
                   style: TextStyle(

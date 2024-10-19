@@ -97,7 +97,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   leading: const Icon(Icons.payment_outlined,
                       color: Color.fromARGB(255, 0, 0, 0)),
                   title: const Text('Payment'),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).pushNamed(paymentRoute);
+                  },
                 ),
                 const Divider(),
                 ListTile(
