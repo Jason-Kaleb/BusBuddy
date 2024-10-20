@@ -11,32 +11,34 @@ class PaymentView extends StatefulWidget {
 }
 
 class _PaymentViewState extends State<PaymentView> {
-  int _points =0;
+  int _points = 0;
   @override
-  void initState(){
+  void initState() {
     super.initState();
     _fetchUserPoints();
   }
+
   Future<void> _fetchUserPoints() async {
-    try{
+    try {
       final user = FirebaseAuth.instance.currentUser;
-      if(user != null) {
+      if (user != null) {
         final uid = user.uid;
 
         final DatabaseReference ref =
             FirebaseDatabase.instance.ref('users/$uid/points');
 
         final DataSnapshot snapshot = await ref.get();
-        if(snapshot.exists) {
+        if (snapshot.exists) {
           setState(() {
             _points = snapshot.value as int;
           });
         }
       }
-    } catch (e){
+    } catch (e) {
       print('Error fetching points: $e');
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -143,9 +145,9 @@ class _PaymentViewState extends State<PaymentView> {
                       ),
                       const SizedBox(height: 20.0),
                       ListTile(
-                        leading: const Icon(Icons.add, color: Colors.black),
+                        leading: const Icon(Icons.link, color: Colors.black),
                         title: const Text(
-                          'Add debit/credit card',
+                          'Link PayPal Account',
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),

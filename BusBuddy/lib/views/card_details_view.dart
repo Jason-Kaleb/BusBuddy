@@ -8,7 +8,6 @@ class CardDetailsView extends StatefulWidget {
 }
 
 class _CardDetailsViewState extends State<CardDetailsView> {
-  bool _saveCardDetails = false;
   final double sizedBoxSpacing = 25.0;
 
   @override
@@ -171,41 +170,6 @@ class _CardDetailsViewState extends State<CardDetailsView> {
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
                     ),
                   ),
-                ),
-                SizedBox(height: sizedBoxSpacing),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    const Expanded(
-                      flex: 3,
-                      child: Text(
-                        "Save card details for next time?",
-                        style: TextStyle(
-                            fontSize: 19.0, fontWeight: FontWeight.w500),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Switch(
-                          value: _saveCardDetails, // State for switch
-                          onChanged: (bool value) {
-                            setState(() {
-                              _saveCardDetails = value; // Toggle state
-                            });
-                          },
-                          activeColor: const Color(0xFFFF4500),
-                          inactiveThumbColor: Colors.white,
-                          inactiveTrackColor:
-                              const Color.fromARGB(244, 245, 243, 237),
-                          trackOutlineColor: const WidgetStatePropertyAll(
-                            Color.fromARGB(255, 255, 255, 255),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
                 SizedBox(height: sizedBoxSpacing),
                 Center(
