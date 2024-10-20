@@ -3,7 +3,7 @@ import 'package:busbuddy/services/auth/auth_user.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'package:firebase_auth/firebase_auth.dart'
-    show FirebaseAuth, FirebaseAuthException, UserCredential;
+    show EmailAuthProvider, FirebaseAuth, FirebaseAuthException, UserCredential;
 
 import 'package:busbuddy/services/auth/auth_provider.dart';
 import 'package:busbuddy/services/auth/auth_exceptions.dart';
@@ -99,6 +99,28 @@ class FirebaseAuthProvider implements AuthProvider {
       await user.sendEmailVerification();
     } else {
       throw UserNotLoggedInAuthException();
+    }
+  }
+
+  @override
+  Future<void> deleteUser({required String password}) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final credential =
+          EmailAuthProvider.credential(email: user.email!, password: password);
+      await user.reauthenticateWithCredential(credential);
+      await user.delete();
+    } else {
+      throw FailedToDeleteUserException();
+    }
+  }
+
+  @override
+  Future<void> resetPassword({required String email}) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+    } on InvalidEmailAuthException {
+      throw InvalidEmailAuthException();
     }
   }
 

@@ -70,7 +70,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     color: Colors.black,
                   ),
                 ),
-                currentAccountPictureSize: const Size.square(50),
                 currentAccountPicture: const CircleAvatar(
                   backgroundColor: Color.fromARGB(255, 240, 239, 239),
                   child: Icon(
@@ -97,7 +96,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   leading: const Icon(Icons.payment_outlined,
                       color: Color.fromARGB(255, 0, 0, 0)),
                   title: const Text('Payment'),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).pushNamed(paymentRoute);
+                  },
                 ),
                 const Divider(),
                 ListTile(

@@ -37,10 +37,10 @@ class _ProfileViewState extends State<ProfileView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Container(
-          color: Colors.grey.shade300,
+          color: Colors.white,
           child: Column(
             children: <Widget>[
               Padding(

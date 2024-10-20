@@ -7,3 +7,6 @@ const updateEmailRoute = '/updateEmail/';
 const verifyEmailRoute = '/verifyEmail/';
 const profileRoute = '/profile/';
 const deleteRoute = '/delete/';
+const paymentRoute = '/payment/';
+const cardRoute = '/card/';
+const forgotPasswordRoute = '/forgotPassword/';
