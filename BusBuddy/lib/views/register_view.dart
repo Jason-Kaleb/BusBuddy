@@ -5,6 +5,8 @@ import 'package:busbuddy/utilities/dialogs/error_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:busbuddy/views/login_view.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -268,6 +270,17 @@ class _RegisterViewState extends State<RegisterView> {
                       email: email,
                       password: password,
                     );
+                    final User? user = FirebaseAuth.instance.currentUser;
+                    if(user!=null){
+                      DatabaseReference usersRef = FirebaseDatabase.instance.ref('users/${user.uid}');
+
+                      await usersRef.set({
+                        'fullName':fullName,
+                        'email':email,
+                        'uid':user.uid,
+                        'points': 0,
+                      });
+                    }
                     AuthService.firebase().sendEmailVerification();
                     if (context.mounted) {
                       Navigator.of(context).pushNamed(

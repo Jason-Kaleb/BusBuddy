@@ -1,5 +1,7 @@
 import 'package:busbuddy/constants/routes.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class PaymentView extends StatefulWidget {
   const PaymentView({super.key});
@@ -9,6 +11,32 @@ class PaymentView extends StatefulWidget {
 }
 
 class _PaymentViewState extends State<PaymentView> {
+  int _points =0;
+  @override
+  void initState(){
+    super.initState();
+    _fetchUserPoints();
+  }
+  Future<void> _fetchUserPoints() async {
+    try{
+      final user = FirebaseAuth.instance.currentUser;
+      if(user != null) {
+        final uid = user.uid;
+
+        final DatabaseReference ref =
+            FirebaseDatabase.instance.ref('users/$uid/points');
+
+        final DataSnapshot snapshot = await ref.get();
+        if(snapshot.exists) {
+          setState(() {
+            _points = snapshot.value as int;
+          });
+        }
+      }
+    } catch (e){
+      print('Error fetching points: $e');
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,9 +103,9 @@ class _PaymentViewState extends State<PaymentView> {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      '0 Points',
-                      style: TextStyle(
+                    Text(
+                      '$_points Points',
+                      style: const TextStyle(
                         fontSize: 24.0,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
