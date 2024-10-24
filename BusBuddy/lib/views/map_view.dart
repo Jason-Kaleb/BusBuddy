@@ -18,10 +18,13 @@ class _MapViewState extends State<MapView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final Location _locationController = Location();
 
-  LatLng _initialPosition = LatLng(26.2894,27.8956);
+  LatLng _initialPosition = LatLng(-26.26440,27.88017);
   LatLng? _currentPosition;
 
   MapController mapController = MapController();
+
+
+  bool _firstLocationUpdate = true;
 
   @override
   void initState() {
@@ -120,8 +123,14 @@ class _MapViewState extends State<MapView> {
         setState(() {
           _currentPosition = LatLng(currentLocation.latitude!, currentLocation.longitude!);
         });
-        mapController.move(_currentPosition!, 13.0);
+        if(_firstLocationUpdate){
+          mapController.move(_currentPosition!, 13.0);
+          _firstLocationUpdate = false;
+        }
+        print("Initial Position: $_initialPosition");
+        print("Current Position: $_currentPosition");
       }
     });
   }
+
   }
