@@ -12,11 +12,33 @@ import 'package:busbuddy/views/update_info.dart';
 import 'package:busbuddy/views/verify_email_view.dart';
 import 'package:busbuddy/views/login_view.dart';
 import 'package:busbuddy/views/map_view.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'route_data.dart';
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeFirebase();
+  await initializeFirebaseRoutes();
   runApp(const MyApp());
+}
+
+Future<void> initializeFirebase() async{
+  await Firebase.initializeApp();
+}
+
+Future<void> initializeFirebaseRoutes() async {
+  final DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
+  final DataSnapshot snapshot = await databaseRef.child('bus_routes/T1').get();
+
+  if(!snapshot.exists){
+    final routeData = RouteData();
+    await routeData.saveTrunk1Route();
+  }else{
+    print('Bus routes already exist in firebase');
+  }
 }
 
 class MyApp extends StatelessWidget {
