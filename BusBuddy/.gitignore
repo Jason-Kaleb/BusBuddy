@@ -44,6 +44,7 @@ app.*.map.json
 
 #firebase_options.dart file
 /lib/firebase_options.dart
+/lib/consts.dart
 
 /app/google-services.json
 
@@ -55,3 +56,6 @@ android/app/*.json
 BusBuddy/android/app/google-services.json
 
 
+BusBuddy\BusBuddy\BusBuddy\lib\consts.dart
+
+consts.dart
