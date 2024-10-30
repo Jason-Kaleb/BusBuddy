@@ -23,6 +23,7 @@ class _MapViewState extends State<MapView> {
   LatLng? _currentPosition;
 
   MapController mapController = MapController();
+  double _currentZoom = 13.0;
 
   List<Marker> busStopMarkers =[];
   bool _firstLocationUpdate = true;
@@ -46,7 +47,7 @@ class _MapViewState extends State<MapView> {
             mapController: mapController,
             options: MapOptions(
               center: _initialPosition,
-              zoom: 13.0,
+              zoom: _currentZoom,
 
             ),
             children: [
@@ -98,6 +99,32 @@ class _MapViewState extends State<MapView> {
                 onPressed: () => _scaffoldKey.currentState?.openDrawer(),
               ),
             ),
+          ),
+          Positioned(
+            right:15,
+            bottom: 100,
+            child: FloatingActionButton(
+                onPressed: (){
+                  setState(() {
+                    _currentZoom += 1;
+                    mapController.move(mapController.center,_currentZoom);
+                  });
+                },
+                child: const Icon(Icons.zoom_in),
+            ),
+          ),
+          Positioned(
+            right: 15,
+              bottom: 30,
+              child: FloatingActionButton(
+                  onPressed: (){
+                    setState(() {
+                      _currentZoom-=1;
+                      mapController.move(mapController.center, _currentZoom);
+                    });
+                  },
+                  child: const Icon(Icons.zoom_out),
+              ),
           ),
         ],
       ),
