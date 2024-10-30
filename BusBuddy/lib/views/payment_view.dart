@@ -181,12 +181,6 @@ class _PaymentViewState extends State<PaymentView> {
                               amount: amount,
                             );
 
-                            _points += amount;
-
-                            setState(() {
-                              _points += amount;
-                            });
-
                             final user = FirebaseAuth.instance.currentUser;
                             if (user != null) {
                               final uid = user.uid;
@@ -194,6 +188,7 @@ class _PaymentViewState extends State<PaymentView> {
                                   .instance
                                   .ref('users/$uid/points');
                               await ref.set(_points);
+                              user.reload();
                             }
                           } else {
                             if (context.mounted) {
