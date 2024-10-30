@@ -103,7 +103,7 @@ class _PersonalInfoViewState extends State<PersonalInfoView> {
                             ),
                             prefixIcon: const Icon(
                               Icons.person,
-                              color: Colors.grey,
+                              color: Colors.black,
                             ),
                             suffix: TextButton(
                               onPressed: () {
@@ -125,32 +125,15 @@ class _PersonalInfoViewState extends State<PersonalInfoView> {
                         TextField(
                           controller: _emailController,
                           readOnly: true,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             hintText: "Email",
-                            contentPadding: const EdgeInsets.symmetric(
+                            contentPadding: EdgeInsets.symmetric(
                               horizontal: 20.0,
                               vertical: 14.0,
                             ),
-                            prefixIcon: const Icon(
+                            prefixIcon: Icon(
                               Icons.email,
                               color: Colors.black,
-                            ),
-                            suffix: TextButton(
-                              onPressed: () {
-                                if (context.mounted) {
-                                  Navigator.of(context).pushNamedAndRemoveUntil(
-                                    updateEmailRoute,
-                                    (route) => false,
-                                  );
-                                }
-                              },
-                              child: const Text(
-                                'Edit',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.black,
-                                ),
-                              ),
                             ),
                           ),
                         ),

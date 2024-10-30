@@ -107,7 +107,9 @@ class _PaymentViewState extends State<PaymentView> {
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.vertical(
-                      bottom: Radius.circular(20), top: Radius.circular(20)),
+                    bottom: Radius.circular(20),
+                    top: Radius.circular(20),
+                  ),
                 ),
                 padding: const EdgeInsets.symmetric(
                     horizontal: 20.0, vertical: 20.0),
@@ -178,8 +180,21 @@ class _PaymentViewState extends State<PaymentView> {
                               merchantDisplayName: _userName,
                               amount: amount,
                             );
+
                             _points += amount;
-                            '$_points Points';
+
+                            setState(() {
+                              _points += amount;
+                            });
+
+                            final user = FirebaseAuth.instance.currentUser;
+                            if (user != null) {
+                              final uid = user.uid;
+                              final DatabaseReference ref = FirebaseDatabase
+                                  .instance
+                                  .ref('users/$uid/points');
+                              await ref.set(_points);
+                            }
                           } else {
                             if (context.mounted) {
                               showErrorDialog(context,

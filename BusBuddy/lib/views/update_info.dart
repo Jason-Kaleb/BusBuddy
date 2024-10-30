@@ -1,7 +1,8 @@
 import 'package:busbuddy/constants/routes.dart';
+import 'package:busbuddy/utilities/dialogs/error_dialog.dart';
+import 'package:busbuddy/utilities/dialogs/success_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:busbuddy/services/auth_service.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class UpdateInfoView extends StatefulWidget {
   const UpdateInfoView({super.key});
@@ -166,17 +167,24 @@ class _UpdateInfoViewState extends State<UpdateInfoView> {
                       ),
                       onPressed: () async {
                         final name = _nameController.text;
+                        final lastName = _lastNameController.text;
+                        final String fullName = "$name $lastName";
                         try {
-                          await AuthService().updateDisplayName(name);
+                          await AuthService().updateDisplayName(fullName);
+
+                          if (context.mounted) {
+                            showSuccessDialog(
+                              context,
+                              "Name updated successfully",
+                            );
+                          }
+
+                          _nameController.clear();
+                          _lastNameController.clear();
                         } catch (e) {
-                          Fluttertoast.showToast(
-                            msg: e.toString(),
-                            toastLength: Toast.LENGTH_LONG,
-                            gravity: ToastGravity.SNACKBAR,
-                            backgroundColor: Colors.black54,
-                            textColor: Colors.white,
-                            fontSize: 14.0,
-                          );
+                          if (context.mounted) {
+                            showErrorDialog(context, "Unexpected error");
+                          }
                         }
                       },
                       child: const Text(
