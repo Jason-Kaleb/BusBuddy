@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:busbuddy/consts.dart';
 import 'package:busbuddy/views/custom_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -19,13 +18,13 @@ class _MapViewState extends State<MapView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final Location _locationController = Location();
 
-  LatLng _initialPosition = LatLng(-26.26447,27.88018);
+  final LatLng _initialPosition = const LatLng(-26.26447, 27.88018);
   LatLng? _currentPosition;
 
   MapController mapController = MapController();
   double _currentZoom = 13.0;
 
-  List<Marker> busStopMarkers =[];
+  List<Marker> busStopMarkers = [];
   bool _firstLocationUpdate = true;
 
   @override
@@ -34,12 +33,13 @@ class _MapViewState extends State<MapView> {
     getLocationUpdates();
     fetchBusStops();
   }
+
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
       drawer: const Drawer(
-        child: Center(child: const CustomDrawer()),
+        child: Center(child: CustomDrawer()),
       ),
       body: Stack(
         children: [
@@ -47,14 +47,14 @@ class _MapViewState extends State<MapView> {
             mapController: mapController,
             options: MapOptions(
               center: _initialPosition,
-              zoom: _currentZoom,
-
+              zoom: _currentZoom,              
             ),
             children: [
               TileLayer(
-                urlTemplate : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                subdomains: ['a','b','c'],
-                additionalOptions: {
+                urlTemplate:
+                    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                subdomains: const ['a', 'b', 'c'],
+                additionalOptions: const {
                   'attribution': "© OpenStreetMap contributors",
                 },
               ),
@@ -63,7 +63,7 @@ class _MapViewState extends State<MapView> {
                   ...busStopMarkers,
                   if (_currentPosition != null)
                     Marker(
-                      point:  _currentPosition!,
+                      point: _currentPosition!,
                       builder: (ctx) => const Icon(
                         Icons.location_pin,
                         color: Colors.red,
@@ -131,30 +131,33 @@ class _MapViewState extends State<MapView> {
     );
   }
 
-  Future<void> getLocationUpdates() async{
+  Future<void> getLocationUpdates() async {
     bool serviceEnabled;
     PermissionStatus permissionGranted;
 
     serviceEnabled = await _locationController.serviceEnabled();
-    if(!serviceEnabled){
+    if (!serviceEnabled) {
       serviceEnabled = await _locationController.requestService();
-      if(!serviceEnabled) return;
+      if (!serviceEnabled) return;
     }
 
     permissionGranted = await _locationController.hasPermission();
-    if(permissionGranted == PermissionStatus.denied){
+    if (permissionGranted == PermissionStatus.denied) {
       permissionGranted = await _locationController.requestPermission();
-      if(permissionGranted != PermissionStatus.granted){
+      if (permissionGranted != PermissionStatus.granted) {
         return;
       }
     }
 
-    _locationController.onLocationChanged.listen((LocationData currentLocation){
-      if (currentLocation.latitude !=null && currentLocation.longitude != null){
+    _locationController.onLocationChanged
+        .listen((LocationData currentLocation) {
+      if (currentLocation.latitude != null &&
+          currentLocation.longitude != null) {
         setState(() {
-          _currentPosition = LatLng(currentLocation.latitude!, currentLocation.longitude!);
+          _currentPosition =
+              LatLng(currentLocation.latitude!, currentLocation.longitude!);
         });
-        if (_firstLocationUpdate){
+        if (_firstLocationUpdate) {
           mapController.move(_currentPosition!, 13.0);
           _firstLocationUpdate = false;
         }
@@ -166,11 +169,12 @@ class _MapViewState extends State<MapView> {
     final DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
     final snapshot = await databaseRef.child('bus_routes/T1/stops').get();
 
-    if(snapshot.exists){
-      Map<String, dynamic> stops = Map<String, dynamic>.from(snapshot.value as Map);
+    if (snapshot.exists) {
+      Map<String, dynamic> stops =
+          Map<String, dynamic>.from(snapshot.value as Map);
       List<Marker> markers = [];
 
-      stops.forEach((key,stop){
+      stops.forEach((key, stop) {
         LatLng stopCoord = LatLng(stop['latitude'], stop['longitude']);
         markers.add(
           Marker(
@@ -187,8 +191,8 @@ class _MapViewState extends State<MapView> {
       setState(() {
         busStopMarkers = markers;
       });
-    }else{
+    } else {
       print('No data available for this route.');
     }
   }
-  }
+}

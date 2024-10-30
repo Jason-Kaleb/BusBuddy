@@ -1,4 +1,7 @@
-import 'package:busbuddy/constants/routes.dart';
+import 'package:busbuddy/services/auth/user_service.dart';
+import 'package:busbuddy/services/payment/stripe_service.dart';
+import 'package:busbuddy/utilities/dialogs/error_dialog.dart';
+import 'package:busbuddy/utilities/dialogs/prompt_for_payment_dialog.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,11 +14,26 @@ class PaymentView extends StatefulWidget {
 }
 
 class _PaymentViewState extends State<PaymentView> {
+  String _userName = 'Loading...';
+  final UserService _userService = UserService();
+
   int _points = 0;
+
+  Future<void> _loadUserData() async {
+    String name = await _userService.getUserName();
+
+    if (context.mounted) {
+      setState(() {
+        _userName = name;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     _fetchUserPoints();
+    _loadUserData();
   }
 
   Future<void> _fetchUserPoints() async {
@@ -145,14 +163,29 @@ class _PaymentViewState extends State<PaymentView> {
                       ),
                       const SizedBox(height: 20.0),
                       ListTile(
-                        leading: const Icon(Icons.link, color: Colors.black),
+                        leading: const Icon(Icons.payments_rounded,
+                            color: Colors.black),
                         title: const Text(
-                          'Link PayPal Account',
+                          'Pay with Stripe',
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                        onTap: () {
-                          Navigator.of(context).pushNamed(cardRoute);
+                        onTap: () async {
+                          final int? amount =
+                              await promptForPayment(context, _userName);
+                          if (amount != null) {
+                            StripeService.instance.makePayment(
+                              merchantDisplayName: _userName,
+                              amount: amount,
+                            );
+                            _points += amount;
+                            '$_points Points';
+                          } else {
+                            if (context.mounted) {
+                              showErrorDialog(context,
+                                  "Payment was canceled or no amount was entered.");
+                            }
+                          }
                         },
                       ),
                     ],

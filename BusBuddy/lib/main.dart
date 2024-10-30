@@ -1,4 +1,5 @@
 import 'package:busbuddy/constants/routes.dart';
+import 'package:busbuddy/consts.dart';
 import 'package:busbuddy/services/auth/auth_service.dart';
 import 'package:busbuddy/views/card_details_view.dart';
 import 'package:busbuddy/views/delete_view.dart';
@@ -15,17 +16,23 @@ import 'package:busbuddy/views/map_view.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'route_data.dart';
-
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeFirebase();
   await initializeFirebaseRoutes();
+  await _setup();
   runApp(const MyApp());
 }
 
-Future<void> initializeFirebase() async{
+Future<void> _setup() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  Stripe.publishableKey = stripePublishableKey;
+}
+
+Future<void> initializeFirebase() async {
   await Firebase.initializeApp();
 }
 
@@ -33,10 +40,10 @@ Future<void> initializeFirebaseRoutes() async {
   final DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
   final DataSnapshot snapshot = await databaseRef.child('bus_routes/T1').get();
 
-  if(!snapshot.exists){
+  if (!snapshot.exists) {
     final routeData = RouteData();
     await routeData.saveTrunk1Route();
-  }else{
+  } else {
     print('Bus routes already exist in firebase');
   }
 }
