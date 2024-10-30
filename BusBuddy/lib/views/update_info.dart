@@ -80,7 +80,6 @@ class _UpdateInfoViewState extends State<UpdateInfoView> {
                     TextField(
                       controller: _nameController,
                       autofocus: false,
-                      obscureText: true,
                       enableSuggestions: false,
                       autocorrect: false,
                       decoration: const InputDecoration(
@@ -121,7 +120,6 @@ class _UpdateInfoViewState extends State<UpdateInfoView> {
                     TextField(
                       controller: _lastNameController,
                       autofocus: false,
-                      obscureText: true,
                       enableSuggestions: false,
                       autocorrect: false,
                       decoration: const InputDecoration(
