@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'dart:convert';
 import 'package:busbuddy/consts.dart';
 import 'package:busbuddy/views/custom_drawer.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +7,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:http/http.dart'as http;
 
 class MapView extends StatefulWidget {
   const MapView({super.key});
@@ -26,6 +27,7 @@ class _MapViewState extends State<MapView> {
   double _currentZoom = 13.0;
 
   List<Marker> busStopMarkers =[];
+  List<Polyline> busRoutes = [];
   bool _firstLocationUpdate = true;
 
   @override
@@ -57,6 +59,9 @@ class _MapViewState extends State<MapView> {
                 additionalOptions: {
                   'attribution': "© OpenStreetMap contributors",
                 },
+              ),
+              PolylineLayer(
+                polylines: busRoutes,
               ),
               MarkerLayer(
                 markers: [
@@ -167,10 +172,14 @@ class _MapViewState extends State<MapView> {
     final snapshot = await databaseRef.child('bus_routes/T1/stops').get();
 
     if(snapshot.exists){
+      //Map<String, dynamic> routeData = Map<String, dynamic>.from(snapshot.value as Map);
       Map<String, dynamic> stops = Map<String, dynamic>.from(snapshot.value as Map);
       List<Marker> markers = [];
+      List<LatLng> routeCoords = [];
+      List<LatLng> fullRouteCoords = [];
+      //LatLng? previousStop;
 
-      stops.forEach((key,stop){
+      stops.forEach((key,stop) async {
         LatLng stopCoord = LatLng(stop['latitude'], stop['longitude']);
         markers.add(
           Marker(
@@ -182,7 +191,29 @@ class _MapViewState extends State<MapView> {
             ),
           ),
         );
+        routeCoords.add(stopCoord);
       });
+      for(int i = 0; i<routeCoords.length-1;i++){
+        LatLng start = routeCoords[i];
+        LatLng end = routeCoords[i+1];
+
+        try{
+          List<LatLng> segment = await fetchRoute(start, end);
+          fullRouteCoords.addAll(segment);
+        }catch(e){
+          print('Error fetching route from to $end: $e');
+        }
+      }
+      if(fullRouteCoords.isNotEmpty){
+        busRoutes.clear();
+        busRoutes.add(
+          Polyline(
+              points: fullRouteCoords,
+              strokeWidth: 4.0,
+            color: Colors.red,
+          ),
+        );
+      }
 
       setState(() {
         busStopMarkers = markers;
@@ -191,4 +222,15 @@ class _MapViewState extends State<MapView> {
       print('No data available for this route.');
     }
   }
+  Future<List<LatLng>> fetchRoute(LatLng start, LatLng end) async {
+    final url = 'http://router.project-osrm.org/route/v1/driving/${start.longitude},${start.latitude};${end.longitude},${end.latitude}?geometries=geojson';
+    final response = await http.get(Uri.parse(url));
+    if(response.statusCode == 200){
+      final data = json.decode(response.body);
+      final List<dynamic> coordinates = data['routes'][0]['geometry']['coordinates'];
+      return coordinates.map((coord) => LatLng(coord[1], coord[0])).toList();
+    }else{
+      throw Exception('Failed to fetch route');
+    }
   }
+}
