@@ -35,98 +35,196 @@ class _CustomDrawerState extends State<CustomDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      width: 320,
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 0.0),
-            padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 255, 255, 255),
-              borderRadius: BorderRadius.circular(20.0),
+      child: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFFFFF0E6), Colors.white],
+          ),
+        ),
+        child: Column(
+          children: <Widget>[
+            _buildHeader(),
+            Expanded(
+              child: _buildMenuItems(),
             ),
-            child: InkWell(
-              onTap: () {
-                Navigator.of(context).pushNamed(
-                  profileRoute,
-                );
-              },
-              splashColor: const Color.fromARGB(255, 122, 122, 122),
-              highlightColor: const Color.fromARGB(255, 122, 122, 122),
-              child: UserAccountsDrawerHeader(
-                accountName: Text(
-                  _userName,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    color: Colors.black,
-                  ),
-                ),
-                accountEmail: Text(
-                  _userEmail,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.black,
-                  ),
-                ),
-                currentAccountPicture: const CircleAvatar(
-                  backgroundColor: Color.fromARGB(255, 240, 239, 239),
-                  child: Icon(
-                    Icons.person,
-                    color: Color.fromARGB(255, 141, 140, 140),
-                  ),
-                ),
-                decoration: const BoxDecoration(
-                  color: Colors.transparent,
+            _buildFooter(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(24, 64, 24, 24),
+      decoration: const BoxDecoration(
+        color: Color(0xFFFF4500),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(30),
+          bottomRight: Radius.circular(30),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 36,
+                backgroundColor: Colors.white,
+                child: Text(
+                  _userName.isNotEmpty ? _userName[0].toUpperCase() : '?',
+                  style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Color(0xFFFF4500)),
                 ),
               ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      _userName,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      _userEmail,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.white70,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          ElevatedButton.icon(
+            onPressed: () => Navigator.of(context).pushNamed(profileRoute),
+            icon: const Icon(Icons.person, size: 18),
+            label: const Text('View Profile'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              foregroundColor: const Color(0xFFFF4500),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             ),
           ),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 20.0),
-            padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 255, 255, 255),
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-            child: Column(
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMenuItems() {
+    return ListView(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      children: [
+        _buildMenuItem(
+          icon: Icons.payment_outlined,
+          title: 'Payment',
+          onTap: () => Navigator.of(context).pushNamed(paymentRoute),
+        ),
+        _buildMenuItem(
+          icon: Icons.support_agent,
+          title: 'Support',
+          onTap: () => Navigator.of(context).pushNamed(supportRoute),
+        ),
+        _buildMenuItem(
+          icon: Icons.info_outline_rounded,
+          title: 'About',
+          onTap: () => Navigator.of(context).pushNamed(aboutRoute),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMenuItem({required IconData icon, required String title, required VoidCallback onTap}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Ink(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.1),
+                spreadRadius: 1,
+                blurRadius: 3,
+                offset: const Offset(0, 1),
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
               children: [
-                ListTile(
-                  leading: const Icon(Icons.payment_outlined,
-                      color: Color.fromARGB(255, 0, 0, 0)),
-                  title: const Text('Payment'),
-                  onTap: () {
-                    Navigator.of(context).pushNamed(paymentRoute);
-                  },
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFF0E6),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(icon, color: const Color(0xFFFF4500), size: 24),
                 ),
-                const Divider(),
-                ListTile(
-                  leading: const Icon(Icons.support_agent,
-                      color: Color.fromARGB(255, 0, 0, 0)),
-                  title: const Text('Support'),
-                  onTap: () {
-                    Navigator.of(context).pushNamed(supportRoute);
-                  },
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  ),
                 ),
-                const Divider(),
-                ListTile(
-                  leading: const Icon(Icons.info_outline_rounded,
-                      color: Color.fromARGB(255, 0, 0, 0)),
-                  title: const Text('About'),
-                  onTap: () {
-                    Navigator.of(context).pushNamed(aboutRoute);
-                  },
-                ),
+                const Icon(Icons.chevron_right, color: Colors.grey),
               ],
             ),
           ),
-          Container(
-            height: 352,
-            margin: const EdgeInsets.symmetric(horizontal: 0.0),
-            padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 255, 255, 255),
-              borderRadius: BorderRadius.circular(20.0),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFooter() {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 3,
+            offset: const Offset(0, -1),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text(
+            'Bus Buddy',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFFFF4500),
+            ),
+          ),
+          Text(
+            'Version 1.0.0',
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey[600],
             ),
           ),
         ],
