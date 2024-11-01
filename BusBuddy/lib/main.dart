@@ -1,6 +1,7 @@
 import 'package:busbuddy/constants/routes.dart';
 import 'package:busbuddy/consts.dart';
 import 'package:busbuddy/services/auth/auth_service.dart';
+import 'package:busbuddy/views/about_view.dart';
 import 'package:busbuddy/views/card_details_view.dart';
 import 'package:busbuddy/views/delete_view.dart';
 import 'package:busbuddy/views/payment_view.dart';
@@ -8,6 +9,7 @@ import 'package:busbuddy/views/personal_info.dart';
 import 'package:busbuddy/views/profile_view.dart';
 import 'package:busbuddy/views/register_view.dart';
 import 'package:busbuddy/views/reset_password_view.dart';
+import 'package:busbuddy/views/support_view.dart';
 import 'package:busbuddy/views/update_email_view.dart';
 import 'package:busbuddy/views/update_info.dart';
 import 'package:busbuddy/views/verify_email_view.dart';
@@ -74,6 +76,8 @@ class MyApp extends StatelessWidget {
         paymentRoute: (context) => const PaymentView(),
         cardRoute: (context) => const CardDetailsView(),
         forgotPasswordRoute: (context) => const ForgotPasswordView(),
+        aboutRoute: (context) => const AboutView(),
+        supportRoute: (context) => const SupportView()
       },
     );
   }

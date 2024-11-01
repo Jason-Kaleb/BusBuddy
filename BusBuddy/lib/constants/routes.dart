@@ -10,3 +10,5 @@ const deleteRoute = '/delete/';
 const paymentRoute = '/payment/';
 const cardRoute = '/card/';
 const forgotPasswordRoute = '/forgotPassword/';
+const aboutRoute = '/about/';
+const supportRoute = '/support/';

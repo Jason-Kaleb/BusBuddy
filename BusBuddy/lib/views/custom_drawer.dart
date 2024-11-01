@@ -48,9 +48,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
             ),
             child: InkWell(
               onTap: () {
-                Navigator.of(context).pushNamedAndRemoveUntil(
+                Navigator.of(context).pushNamed(
                   profileRoute,
-                  (route) => false,
                 );
               },
               splashColor: const Color.fromARGB(255, 122, 122, 122),
@@ -105,14 +104,18 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   leading: const Icon(Icons.support_agent,
                       color: Color.fromARGB(255, 0, 0, 0)),
                   title: const Text('Support'),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).pushNamed(supportRoute);
+                  },
                 ),
                 const Divider(),
                 ListTile(
                   leading: const Icon(Icons.info_outline_rounded,
                       color: Color.fromARGB(255, 0, 0, 0)),
                   title: const Text('About'),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).pushNamed(aboutRoute);
+                  },
                 ),
               ],
             ),

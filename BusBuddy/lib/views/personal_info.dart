@@ -42,107 +42,113 @@ class _PersonalInfoViewState extends State<PersonalInfoView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Stack(
-        children: <Widget>[
-          Positioned(
-            top:
-                -100.0, // Adjust these values to move the image outside the SafeArea
-            left: -125.0, // Adjust left positioning
-            child: Image.asset(
-              "assets/images/Circles.png", // Replace with your image path
-              width: 300, // Adjust image width
-              height: 300, // Adjust image height
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_rounded,
+              color: Color(0xFFFF4500)),
+          onPressed: () => Navigator.of(context).pushNamed(profileRoute),
+        ),
+        title: const Text(
+          'Personal Info',
+          style:
+              TextStyle(color: Color(0xFFFF4500), fontWeight: FontWeight.bold),
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
+            CircleAvatar(
+              radius: 50,
+              backgroundColor: const Color(0xFFFFF0E6),
+              child: Text(
+                _nameController.text.isNotEmpty
+                    ? _nameController.text[0].toUpperCase()
+                    : '?',
+                style: const TextStyle(
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFFFF4500)),
+              ),
             ),
-          ),
-          SafeArea(
-            child: SingleChildScrollView(
-              child: Container(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: IconButton(
-                        icon: const Icon(
-                          Icons.arrow_back_ios_rounded,
-                          color: Colors.black,
-                          size: 35,
-                        ),
-                        onPressed: () {
-                          if (context.mounted) {
-                            Navigator.of(context).pushNamed(
-                              profileRoute,
-                            );
-                          }
+            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15)),
+                color: const Color(0xFFFFF0E6),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      _buildInfoField(
+                        icon: Icons.person,
+                        label: 'Name',
+                        value: _nameController.text,
+                        onEdit: () {
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                            updateRoute,
+                            (route) => false,
+                          );
                         },
-                        color: Colors.black,
                       ),
-                    ),
-                    const Column(
-                      children: <Widget>[
-                        Text(
-                          'Personal Info',
-                          style: TextStyle(
-                              fontSize: 24,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: <Widget>[
-                        TextField(
-                          controller: _nameController,
-                          readOnly: true,
-                          decoration: InputDecoration(
-                            hintText: 'Name',
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 20.0,
-                              vertical: 14.0,
-                            ),
-                            prefixIcon: const Icon(
-                              Icons.person,
-                              color: Colors.black,
-                            ),
-                            suffix: TextButton(
-                              onPressed: () {
-                                if (context.mounted) {
-                                  Navigator.of(context).pushNamedAndRemoveUntil(
-                                    updateRoute,
-                                    (route) => false,
-                                  );
-                                }
-                              },
-                              child: const Text('Edit',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.black,
-                                  )),
-                            ),
-                          ),
-                        ),
-                        TextField(
-                          controller: _emailController,
-                          readOnly: true,
-                          decoration: const InputDecoration(
-                            hintText: "Email",
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: 20.0,
-                              vertical: 14.0,
-                            ),
-                            prefixIcon: Icon(
-                              Icons.email,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                      const Divider(color: Colors.black26),
+                      _buildInfoField(
+                        icon: Icons.email,
+                        label: 'Email',
+                        value: _emailController.text,
+                        onEdit: () {
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                            updateEmailRoute,
+                            (route) => false,
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
+            const SizedBox(height: 20),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInfoField({
+    required IconData icon,
+    required String label,
+    required String value,
+    required VoidCallback onEdit,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        children: [
+          Icon(icon, color: const Color(0xFFFF4500)),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label,
+                    style:
+                        const TextStyle(fontSize: 14, color: Colors.black54)),
+                const SizedBox(height: 4),
+                Text(value,
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold)),
+              ],
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.edit, color: Color(0xFFFF4500)),
+            onPressed: onEdit,
           ),
         ],
       ),

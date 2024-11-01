@@ -34,6 +34,24 @@ class _PaymentViewState extends State<PaymentView> {
     super.initState();
     _fetchUserPoints();
     _loadUserData();
+    _startPointsListener();
+  }
+
+  void _startPointsListener() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final uid = user.uid;
+      DatabaseReference ref =
+          FirebaseDatabase.instance.ref('users/$uid/points');
+      ref.onValue.listen((event) {
+        final int? updatedPoints = event.snapshot.value as int?;
+        if (updatedPoints != null) {
+          setState(() {
+            _points = updatedPoints;
+          });
+        }
+      });
+    }
   }
 
   Future<void> _fetchUserPoints() async {
@@ -176,19 +194,24 @@ class _PaymentViewState extends State<PaymentView> {
                           final int? amount =
                               await promptForPayment(context, _userName);
                           if (amount != null) {
-                            StripeService.instance.makePayment(
-                              merchantDisplayName: _userName,
+                            await StripeService.instance.makePayment(
+                              merchantDisplayName: "Bus Buddy Points",
                               amount: amount,
                             );
 
+                            setState(() {
+                              _points += amount;
+                            });
+
                             final user = FirebaseAuth.instance.currentUser;
+
                             if (user != null) {
                               final uid = user.uid;
                               final DatabaseReference ref = FirebaseDatabase
                                   .instance
                                   .ref('users/$uid/points');
                               await ref.set(_points);
-                              user.reload();
+                              print("it runs successfully");
                             }
                           } else {
                             if (context.mounted) {

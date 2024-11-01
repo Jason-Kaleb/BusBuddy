@@ -38,136 +38,133 @@ class _ProfileViewState extends State<ProfileView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Container(
-          color: Colors.white,
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20.0,
-                  vertical: 10.0,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      icon: const Icon(
-                        Icons.arrow_back_ios_rounded,
-                        color: Colors.black,
-                        size: 30,
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pushNamedAndRemoveUntil(
-                          mapsRoute,
-                          (route) => false,
-                        );
-                      },
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pushNamed(personalRoute);
-                      },
-                      child: const Text(
-                        'Edit Profile',
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFFFF4500),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_rounded,
+              color: Color(0xFFFF4500)),
+          onPressed: () {
+            if (context.mounted) {
+              Navigator.of(context).pushNamed(
+                mapsRoute,
+              );
+            }
+          },
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed(personalRoute);
+            },
+            child: const Text(
+              'Edit Profile',
+              style: TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFFFF4500),
               ),
-              const SizedBox(height: 40),
-              const CircleAvatar(
-                radius: 50.0,
-                backgroundColor: Color.fromARGB(255, 240, 239, 239),
-                child: Icon(
-                  Icons.person,
-                  color: Color.fromARGB(255, 141, 140, 140),
+            ),
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              CircleAvatar(
+                radius: 60.0,
+                backgroundColor: const Color(0xFFFFF0E6),
+                child: Text(
+                  _userName.isNotEmpty ? _userName[0].toUpperCase() : '?',
+                  style: const TextStyle(
+                      fontSize: 48,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFFFF4500)),
                 ),
               ),
               const SizedBox(height: 20),
               Text(
                 _userName,
                 style: const TextStyle(
-                  fontSize: 26.0,
+                  fontSize: 24.0,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
               ),
-              const SizedBox(height: 50.0),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: TextField(
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(
-                      Icons.email,
-                      color: Colors.black,
-                      size: 28,
-                    ),
-                    labelText: _userEmail,
-                    labelStyle: const TextStyle(color: Colors.black),
-                    border: InputBorder.none,
-                  ),
-                  enabled: false,
+              const SizedBox(height: 10),
+              Text(
+                _userEmail,
+                style: const TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.black54,
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.0),
-                child: Divider(
-                  color: Colors.grey,
-                  thickness: 1.0,
-                ),
+              const SizedBox(height: 40),
+              _buildProfileOption(
+                icon: Icons.person,
+                title: 'Personal Information',
+                onTap: () {
+                  Navigator.of(context).pushNamed(personalRoute);
+                },
               ),
-              const SizedBox(height: 50),
-              Column(
-                children: [
-                  ListTile(
-                    leading:
-                        const Icon(Icons.logout, color: Colors.black, size: 30),
-                    title: const Text(
-                      "Logout",
-                      style: TextStyle(fontSize: 18.0, color: Colors.black),
-                    ),
-                    onTap: () async {
-                      final shouldLogout = await showLogOutDialog(context);
-                      if (shouldLogout) {
-                        await AuthService.firebase().logOut();
-                        if (context.mounted) {
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                            loginRoute,
-                            (_) => false,
-                          );
-                        }
-                      }
-                    },
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Divider(
-                      color: Colors.grey,
-                      thickness: 1.0,
-                    ),
-                  ),
-                  ListTile(
-                    leading:
-                        const Icon(Icons.delete, color: Colors.black, size: 30),
-                    title: const Text(
-                      "Delete account",
-                      style: TextStyle(fontSize: 18.0, color: Colors.black),
-                    ),
-                    onTap: () {
-                      Navigator.of(context).pushNamed(deleteRoute);
-                    },
-                  ),
-                ],
+              _buildProfileOption(
+                icon: Icons.logout,
+                title: 'Logout',
+                onTap: () async {
+                  final shouldLogout = await showLogOutDialog(context);
+                  if (shouldLogout) {
+                    await AuthService.firebase().logOut();
+                    if (context.mounted) {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                        loginRoute,
+                        (_) => false,
+                      );
+                    }
+                  }
+                },
+              ),
+              _buildProfileOption(
+                icon: Icons.delete,
+                title: 'Delete Account',
+                onTap: () {
+                  Navigator.of(context).pushNamed(deleteRoute);
+                },
+                isDestructive: true,
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildProfileOption({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+    bool isDestructive = false,
+  }) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      color: isDestructive ? Colors.red[50] : const Color(0xFFFFF0E6),
+      margin: const EdgeInsets.only(bottom: 16),
+      child: ListTile(
+        leading: Icon(icon,
+            color: isDestructive ? Colors.red : const Color(0xFFFF4500)),
+        title: Text(
+          title,
+          style: TextStyle(
+            fontSize: 18.0,
+            fontWeight: FontWeight.w500,
+            color: isDestructive ? Colors.red : Colors.black,
+          ),
+        ),
+        trailing: const Icon(Icons.chevron_right, color: Colors.black54),
+        onTap: onTap,
       ),
     );
   }
