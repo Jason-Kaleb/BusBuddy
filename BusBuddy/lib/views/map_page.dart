@@ -102,14 +102,27 @@ class _MapPageState extends State<MapPage>{
   Widget build(BuildContext context){
     return Scaffold(
       key: _scaffoldKey,
-      drawer: const Drawer(
-        child: Center(child: CustomDrawer()),
+      drawer: Drawer(
+        child: Center(
+          child: GestureDetector(
+            onTap: () {
+              setState(() {
+                _showSearch = false;
+              });
+              Navigator.pop(context);
+            },
+            child: const CustomDrawer(),
+          ),
+        ),
       ),
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.menu),
           onPressed: () {
             _scaffoldKey.currentState?.openDrawer();
+            setState(() {
+              _showSearch = false;
+            });
           },
         ),
         title: const Text('Map Page'),
