@@ -3,6 +3,7 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:busbuddy/consts.dart';
+import 'package:busbuddy/views/custom_drawer.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -16,13 +17,14 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage>{
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   Location _locationController = new Location();
   final Completer<GoogleMapController> _mapController = Completer<GoogleMapController>();
-  static const LatLng _thokozaPark = const LatLng(-26.26447, 27.88018);
   static const LatLng _placeholder = const LatLng(-26.28573, 27.84957);
   LatLng? _currentPosition = null;
 
   Map<PolylineId, Polyline> polylines = {};
+
   @override
   void initState() {
     super.initState();
@@ -36,26 +38,35 @@ class _MapPageState extends State<MapPage>{
   @override
   Widget build(BuildContext context){
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: const Drawer(
+        child: Center(child: CustomDrawer()),
+      ),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: () {
+            _scaffoldKey.currentState?.openDrawer();
+          },
+        ),
+      ),
         body: _currentPosition == null
             ? const Center(
                child: Text("Loading..."),
               )
           :GoogleMap(
-          onMapCreated: ((GoogleMapController controller) =>
-              _mapController.complete(controller)),
+            onMapCreated: (GoogleMapController controller){
+            _mapController.complete(controller);
+            _cameraToPostition(_currentPosition!);
+            },
             initialCameraPosition: CameraPosition(
-                target: _thokozaPark,
+                target: _currentPosition!,
                 zoom: 13),
           markers: {
               Marker(
                 markerId: MarkerId("_currentLocation"),
                 icon: BitmapDescriptor.defaultMarker,
                 position: _currentPosition!,
-              ),
-              Marker(
-                markerId: MarkerId("_sourceLocation"),
-                icon: BitmapDescriptor.defaultMarker,
-                position: _thokozaPark
               ),
             Marker(
                 markerId: MarkerId("_destinationLocation"),
@@ -100,8 +111,10 @@ class _MapPageState extends State<MapPage>{
     _locationController.onLocationChanged.listen((LocationData currentLocation){
       if(currentLocation.latitude !=null && currentLocation.longitude!=null){
         setState(() {
-          _currentPosition =LatLng(currentLocation.latitude!, currentLocation.longitude!);
-          _cameraToPostition(_currentPosition!);
+          _currentPosition =LatLng(currentLocation.latitude!, currentLocation.longitude!);;
+        });
+        getPolylinePoints().then((coordinates){
+          generatePolylineFromPoints(coordinates);
         });
       }
     });
@@ -113,7 +126,7 @@ class _MapPageState extends State<MapPage>{
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
         googleApiKey: GOOGLE_MAPS_API_KEY,
         request: PolylineRequest(
-            origin: PointLatLng(_thokozaPark.latitude, _thokozaPark.longitude),
+            origin: PointLatLng(_currentPosition!.latitude, _currentPosition!.longitude),
             destination: PointLatLng(_placeholder.latitude, _placeholder.longitude),
             mode: TravelMode.driving
         ),
