@@ -21,12 +21,15 @@ class _MapPageState extends State<MapPage>{
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   Location _locationController = new Location();
   final Completer<GoogleMapController> _mapController = Completer<GoogleMapController>();
-  static const LatLng _placeholder = const LatLng(-26.28573, 27.84957);
-  LatLng? _currentPosition = null;
+  static LatLng _placeholder = const LatLng(-26.28573, 27.84957);
+  LatLng? _currentPosition;
+  LatLng? _destinationPosition;
 
   Map<PolylineId, Polyline> polylines = {};
-  List<String> _busStopNames = [];
+  List<Map<String, dynamic>> _busStops = [];
+
   List<String> _filteredBusStopNames = [];
+  bool _showSearch = true;
 
   @override
   void initState() {
@@ -38,7 +41,7 @@ class _MapPageState extends State<MapPage>{
     });
     fetchBusStopNames().then((busStops) {
       setState(() {
-        _busStopNames = busStops;
+        _busStops = busStops;
       });
     });
   }
@@ -61,10 +64,12 @@ class _MapPageState extends State<MapPage>{
             ),
             onChanged: (query) {
               setState(() {
-                _filteredBusStopNames = _busStopNames
-                    .where((name) => name.toLowerCase().contains(query.toLowerCase()))
+                _filteredBusStopNames = _busStops
+                    .where((stop) => stop['name'] != null && stop['name'].toLowerCase().contains(query.toLowerCase()))
+                    .map((stop) => stop['name'] as String)
                     .toList();
               });
+
             },
           ),
           if (_filteredBusStopNames.isNotEmpty)
@@ -76,8 +81,14 @@ class _MapPageState extends State<MapPage>{
                 itemBuilder: (context, index) {
                   return ListTile(
                     title: Text(_filteredBusStopNames[index]),
-                    onTap: () {
-                      // Optional: Perform an action when a bus stop is selected.
+                    onTap: () async {
+                      final coordinates = await getCoordinatesForBusStop(_filteredBusStopNames[index]);
+                      if (coordinates != null) {
+                        setState(() {
+                          _placeholder = coordinates;
+                        });
+                        _cameraToPosition(coordinates);
+                      }
                     },
                   );
                 },
@@ -101,47 +112,65 @@ class _MapPageState extends State<MapPage>{
             _scaffoldKey.currentState?.openDrawer();
           },
         ),
+        title: const Text('Map Page'),
+        actions: [
+          IconButton(
+            icon: Icon(_showSearch ? Icons.close : Icons.search),
+            onPressed: () {
+              setState(() {
+                _showSearch = !_showSearch;
+              });
+            },
+          ),
+        ],
       ),
         body: Stack(
           children: [
-            _currentPosition == null
-                ? const Center(
-              child: Text("Loading..."),
-            )
-                :GoogleMap(
-              onMapCreated: (GoogleMapController controller){
-                _mapController.complete(controller);
-                _cameraToPostition(_currentPosition!);
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  _showSearch = false;
+                });
               },
-              initialCameraPosition: CameraPosition(
+              child: _currentPosition == null
+                  ? const Center(child: Text("Loading..."))
+                  : GoogleMap(
+                onMapCreated: (GoogleMapController controller) {
+                  _mapController.complete(controller);
+                  _cameraToPosition (_currentPosition!);
+                },
+                initialCameraPosition: CameraPosition(
                   target: _currentPosition!,
-                  zoom: 13),
-              markers: {
-                Marker(
-                  markerId: MarkerId("_currentLocation"),
-                  icon: BitmapDescriptor.defaultMarker,
-                  position: _currentPosition!,
+                  zoom: 13,
                 ),
-                Marker(
+                markers: {
+                  Marker(
+                    markerId: MarkerId("_currentLocation"),
+                    icon: BitmapDescriptor.defaultMarker,
+                    position: _currentPosition!,
+                  ),
+                  Marker(
                     markerId: MarkerId("_destinationLocation"),
                     icon: BitmapDescriptor.defaultMarker,
-                    position: _placeholder
-                ),
-              },
-              polylines: Set<Polyline>.of(polylines.values),
+                    position: _placeholder,
+                  ),
+                },
+                polylines: Set<Polyline>.of(polylines.values),
+              ),
             ),
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: _buildSearchFeature(),
-            ),
+            if (_showSearch)
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: _buildSearchFeature(),
+              ),
           ],
         ),
     );
   }
 
-  Future<void>_cameraToPostition(LatLng pos) async{
+  Future<void>_cameraToPosition (LatLng pos) async{
     final GoogleMapController controller = await _mapController.future;
     CameraPosition _newCameraPosition = CameraPosition(
         target: pos,
@@ -214,22 +243,47 @@ class _MapPageState extends State<MapPage>{
       polylines[id] = polyline;
     });
   }
-  Future<List<String>> fetchBusStopNames() async {
+  Future<List<Map<String, dynamic>>> fetchBusStopNames() async {
     final DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
     final snapshot = await databaseRef.child('bus_routes/T1/stops').get();
 
-    List<String> busStopNames = [];
+    List<Map<String, dynamic>> busStops = [];
 
     if (snapshot.exists) {
       Map<String, dynamic> stops = Map<String, dynamic>.from(snapshot.value as Map);
 
       for (var stop in stops.values) {
-        if (stop['name'] != null) {
-          busStopNames.add(stop['name']);
+        if (stop['name'] != null && stop['latitude'] != null && stop['longitude'] != null) {
+          busStops.add({
+            'name': stop['name'],
+            'latitude': stop['latitude'],
+            'longitude': stop['longitude'],
+          });
         }
       }
     }
 
-    return busStopNames;
+    return busStops;
   }
+
+
+  Future<LatLng?> getCoordinatesForBusStop(String busStopName) async {
+    final DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
+    final snapshot = await databaseRef.child('bus_routes/T1/stops').get();
+
+    if (snapshot.exists) {
+      Map<String, dynamic> stops = Map<String, dynamic>.from(snapshot.value as Map);
+
+      for (var stop in stops.values) {
+        if (stop['name'] == busStopName && stop['latitude'] != null && stop['longitude'] != null) {
+          double latitude = double.parse(stop['latitude'].toString());
+          double longitude = double.parse(stop['longitude'].toString());
+          return LatLng(latitude, longitude);
+        }
+      }
+    }
+    return null; // Return null if the bus stop or coordinates aren't found
+  }
+
+
 }
