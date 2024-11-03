@@ -58,3 +58,5 @@ android/app/*.json
 BusBuddy/android/app/google-services.json
 
 BusBuddy/lib/consts.dart
+
+BusBuddy/ios/Runner/AppDelegate.swift
