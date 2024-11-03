@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class SupportView extends StatefulWidget {
@@ -10,11 +12,51 @@ class SupportView extends StatefulWidget {
 class _SupportVieewState extends State<SupportView> {
   final TextEditingController _feedbackController = TextEditingController();
   int _selectedRating = 0;
+  final DatabaseReference _databaseRef = FirebaseDatabase.instance.ref();
 
   @override
   void dispose() {
     _feedbackController.dispose();
     super.dispose();
+  }
+
+  Future<void> _submitFeedback() async{
+    final User? user = FirebaseAuth.instance.currentUser;
+    if(user == null){
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('You need to login to submit feebback.')
+        ),
+      );
+      return;
+    }
+    final String userId = user.uid;
+    final String feedbackText = _feedbackController.text;
+
+    if(_selectedRating == 0 || feedbackText.isEmpty){
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content:Text('Please Provide a rating and Feedback.')
+        ),
+      );
+      return;
+    }
+    Map<String, dynamic> feedbackData = {
+      'userId': userId,
+      'rating':_selectedRating,
+      'feedback':feedbackText,
+      'timestamp':DateTime.now().toIso8601String(),
+    };
+    await _databaseRef.child('user_feeback').push().set(feedbackData);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+          content: Text('Thank you for your feedback!')),
+    );
+    setState(() {
+      _selectedRating = 0;
+      _feedbackController.clear();
+    });
   }
 
   @override
@@ -172,18 +214,16 @@ class _SupportVieewState extends State<SupportView> {
                       ),
                       const SizedBox(height: 16),
                       ElevatedButton(
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('Thank you for your feedback!')),
-                          );
-                        },
+                        onPressed: _submitFeedback,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFFF4500),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30)),
+                          shape:RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30)
+                          ),
                           padding: const EdgeInsets.symmetric(
-                              vertical: 12, horizontal: 24),
+                            vertical: 12,
+                              horizontal: 24
+                          ),
                         ),
                         child: const Text(
                           'Submit Feedback',
