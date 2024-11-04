@@ -27,7 +27,7 @@ class _MapPageState extends State<MapPage> {
   List<Map<String, dynamic>> _busStops = [];
 
   List<String> _filteredBusStopNames = [];
-  bool _showSearch = true;
+  bool _showSearch = false;
 
   @override
   void initState() {
@@ -47,57 +47,79 @@ class _MapPageState extends State<MapPage> {
   Widget _buildSearchFeature() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextField(
-            decoration: InputDecoration(
-              hintText: 'Search for a bus stop',
-              prefixIcon: const Icon(Icons.search),
-              filled: true,
-              fillColor: Colors.white,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8.0),
-                borderSide: BorderSide.none,
-              ),
+      child: Container(
+        width: 20,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8.0),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 8,
+              offset: Offset(0, 4),
             ),
-            onChanged: (query) {
-              setState(() {
-                _filteredBusStopNames = _busStops
-                    .where((stop) =>
-                        stop['name'] != null &&
-                        stop['name']
-                            .toLowerCase()
-                            .contains(query.toLowerCase()))
-                    .map((stop) => stop['name'] as String)
-                    .toList();
-              });
-            },
-          ),
-          if (_filteredBusStopNames.isNotEmpty)
-            Container(
-              color: Colors.white,
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: _filteredBusStopNames.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(_filteredBusStopNames[index]),
-                    onTap: () async {
-                      final coordinates = await getCoordinatesForBusStop(
-                          _filteredBusStopNames[index]);
-                      if (coordinates != null) {
-                        setState(() {
-                          _placeholder = coordinates;
-                        });
-                        _cameraToPosition(coordinates);
-                      }
-                    },
-                  );
-                },
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              decoration: InputDecoration(
+                hintText: 'Search for a bus stop',
+                prefixIcon: const Icon(Icons.search),
+                suffixIcon: IconButton(
+                  icon: Icon(_showSearch ? Icons.close : Icons.search),
+                  onPressed: () {
+                    setState(() {
+                      _showSearch = !_showSearch;
+                    });
+                  },
+                ),
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: BorderSide.none,
+                ),
               ),
+              onChanged: (query) {
+                setState(() {
+                  _filteredBusStopNames = _busStops
+                      .where((stop) =>
+                          stop['name'] != null &&
+                          stop['name']
+                              .toLowerCase()
+                              .contains(query.toLowerCase()))
+                      .map((stop) => stop['name'] as String)
+                      .toList();
+                });
+              },
             ),
-        ],
+            if (_filteredBusStopNames.isNotEmpty)
+              Container(
+                color: Colors.white,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: _filteredBusStopNames.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(_filteredBusStopNames[index]),
+                      onTap: () async {
+                        final coordinates = await getCoordinatesForBusStop(
+                            _filteredBusStopNames[index]);
+                        if (coordinates != null) {
+                          setState(() {
+                            _placeholder = coordinates;
+                          });
+                          _cameraToPosition(coordinates);
+                        }
+                      },
+                    );
+                  },
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -118,28 +140,6 @@ class _MapPageState extends State<MapPage> {
             child: const CustomDrawer(),
           ),
         ),
-      ),
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.menu),
-          onPressed: () {
-            _scaffoldKey.currentState?.openDrawer();
-            setState(() {
-              _showSearch = false;
-            });
-          },
-        ),
-        title: const Text('Map Page'),
-        actions: [
-          IconButton(
-            icon: Icon(_showSearch ? Icons.close : Icons.search),
-            onPressed: () {
-              setState(() {
-                _showSearch = !_showSearch;
-              });
-            },
-          ),
-        ],
       ),
       body: Stack(
         children: [
@@ -173,11 +173,49 @@ class _MapPageState extends State<MapPage> {
                       ),
                     },
                     polylines: Set<Polyline>.of(polylines.values),
+                    myLocationButtonEnabled: true,
+                    zoomControlsEnabled: false,
                   ),
+          ),
+          Positioned(
+            left: 15,
+            top: 50,
+            child: Ink(
+              decoration: const ShapeDecoration(
+                color: Colors.white,
+                shape: CircleBorder(),
+              ),
+              child: IconButton(
+                icon: const Icon(
+                  Icons.menu,
+                  color: Colors.black,
+                ),
+                iconSize: 35.0,
+                onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+              ),
+            ),
+          ),
+          Positioned(
+            left: 350,
+            top: 50,
+            child: Ink(
+              decoration: const ShapeDecoration(
+                color: Colors.white,
+                shape: CircleBorder(),
+              ),
+              child: IconButton(
+                icon: Icon(_showSearch ? Icons.close : Icons.search),
+                onPressed: () {
+                  setState(() {
+                    _showSearch = !_showSearch;
+                  });
+                },
+              ),
+            ),
           ),
           if (_showSearch)
             Positioned(
-              top: 0,
+              top: 30,
               left: 0,
               right: 0,
               child: _buildSearchFeature(),
