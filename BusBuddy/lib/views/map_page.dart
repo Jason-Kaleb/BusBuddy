@@ -1,11 +1,8 @@
 import 'dart:async';
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:busbuddy/consts.dart';
 import 'package:busbuddy/views/custom_drawer.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -17,13 +14,14 @@ class MapPage extends StatefulWidget {
   State<MapPage> createState() => _MapPageState();
 }
 
-class _MapPageState extends State<MapPage>{
+class _MapPageState extends State<MapPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  Location _locationController = new Location();
-  final Completer<GoogleMapController> _mapController = Completer<GoogleMapController>();
+  final Location _locationController = Location();
+  final Completer<GoogleMapController> _mapController =
+      Completer<GoogleMapController>();
   static LatLng _placeholder = const LatLng(-26.28573, 27.84957);
   LatLng? _currentPosition;
-  LatLng? _destinationPosition;
+  //LatLng? _destinationPosition;
 
   Map<PolylineId, Polyline> polylines = {};
   List<Map<String, dynamic>> _busStops = [];
@@ -34,17 +32,18 @@ class _MapPageState extends State<MapPage>{
   @override
   void initState() {
     super.initState();
-    getLocationUpdates().then((value)=>{
-      getPolylinePoints().then((coordinates)=>{
-        generatePolylineFromPoints(coordinates),
-      }),
-    });
+    getLocationUpdates().then((value) => {
+          getPolylinePoints().then((coordinates) => {
+                generatePolylineFromPoints(coordinates),
+              }),
+        });
     fetchBusStopNames().then((busStops) {
       setState(() {
         _busStops = busStops;
       });
     });
   }
+
   Widget _buildSearchFeature() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -54,7 +53,7 @@ class _MapPageState extends State<MapPage>{
           TextField(
             decoration: InputDecoration(
               hintText: 'Search for a bus stop',
-              prefixIcon: Icon(Icons.search),
+              prefixIcon: const Icon(Icons.search),
               filled: true,
               fillColor: Colors.white,
               border: OutlineInputBorder(
@@ -65,11 +64,14 @@ class _MapPageState extends State<MapPage>{
             onChanged: (query) {
               setState(() {
                 _filteredBusStopNames = _busStops
-                    .where((stop) => stop['name'] != null && stop['name'].toLowerCase().contains(query.toLowerCase()))
+                    .where((stop) =>
+                        stop['name'] != null &&
+                        stop['name']
+                            .toLowerCase()
+                            .contains(query.toLowerCase()))
                     .map((stop) => stop['name'] as String)
                     .toList();
               });
-
             },
           ),
           if (_filteredBusStopNames.isNotEmpty)
@@ -82,7 +84,8 @@ class _MapPageState extends State<MapPage>{
                   return ListTile(
                     title: Text(_filteredBusStopNames[index]),
                     onTap: () async {
-                      final coordinates = await getCoordinatesForBusStop(_filteredBusStopNames[index]);
+                      final coordinates = await getCoordinatesForBusStop(
+                          _filteredBusStopNames[index]);
                       if (coordinates != null) {
                         setState(() {
                           _placeholder = coordinates;
@@ -98,8 +101,9 @@ class _MapPageState extends State<MapPage>{
       ),
     );
   }
+
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
       drawer: Drawer(
@@ -137,125 +141,130 @@ class _MapPageState extends State<MapPage>{
           ),
         ],
       ),
-        body: Stack(
-          children: [
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  _showSearch = false;
-                });
-              },
-              child: _currentPosition == null
-                  ? const Center(child: Text("Loading..."))
-                  : GoogleMap(
-                onMapCreated: (GoogleMapController controller) {
-                  _mapController.complete(controller);
-                  _cameraToPosition (_currentPosition!);
-                },
-                initialCameraPosition: CameraPosition(
-                  target: _currentPosition!,
-                  zoom: 13,
-                ),
-                markers: {
-                  Marker(
-                    markerId: MarkerId("_currentLocation"),
-                    icon: BitmapDescriptor.defaultMarker,
-                    position: _currentPosition!,
+      body: Stack(
+        children: [
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                _showSearch = false;
+              });
+            },
+            child: _currentPosition == null
+                ? const Center(child: Text("Loading..."))
+                : GoogleMap(
+                    onMapCreated: (GoogleMapController controller) {
+                      _mapController.complete(controller);
+                      _cameraToPosition(_currentPosition!);
+                    },
+                    initialCameraPosition: CameraPosition(
+                      target: _currentPosition!,
+                      zoom: 13,
+                    ),
+                    markers: {
+                      Marker(
+                        markerId: const MarkerId("_currentLocation"),
+                        icon: BitmapDescriptor.defaultMarker,
+                        position: _currentPosition!,
+                      ),
+                      Marker(
+                        markerId: const MarkerId("_destinationLocation"),
+                        icon: BitmapDescriptor.defaultMarker,
+                        position: _placeholder,
+                      ),
+                    },
+                    polylines: Set<Polyline>.of(polylines.values),
                   ),
-                  Marker(
-                    markerId: MarkerId("_destinationLocation"),
-                    icon: BitmapDescriptor.defaultMarker,
-                    position: _placeholder,
-                  ),
-                },
-                polylines: Set<Polyline>.of(polylines.values),
-              ),
+          ),
+          if (_showSearch)
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: _buildSearchFeature(),
             ),
-            if (_showSearch)
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: _buildSearchFeature(),
-              ),
-          ],
-        ),
+        ],
+      ),
     );
   }
 
-  Future<void>_cameraToPosition (LatLng pos) async{
+  Future<void> _cameraToPosition(LatLng pos) async {
     final GoogleMapController controller = await _mapController.future;
     CameraPosition _newCameraPosition = CameraPosition(
-        target: pos,
-        zoom: 13,
+      target: pos,
+      zoom: 13,
     );
     await controller.animateCamera(
-        CameraUpdate.newCameraPosition(_newCameraPosition),
+      CameraUpdate.newCameraPosition(_newCameraPosition),
     );
   }
 
-  Future<void> getLocationUpdates() async{
+  Future<void> getLocationUpdates() async {
     bool _serviceEnabled;
     PermissionStatus _permissionGranted;
 
     _serviceEnabled = await _locationController.serviceEnabled();
-    if(_serviceEnabled){
+    if (_serviceEnabled) {
       _serviceEnabled = await _locationController.requestService();
-    }else{
+    } else {
       return;
     }
     _permissionGranted = await _locationController.hasPermission();
-    if(_permissionGranted == PermissionStatus.denied){
+    if (_permissionGranted == PermissionStatus.denied) {
       _permissionGranted = await _locationController.requestPermission();
-      if(_permissionGranted != PermissionStatus.granted){
+      if (_permissionGranted != PermissionStatus.granted) {
         return;
       }
     }
 
-    _locationController.onLocationChanged.listen((LocationData currentLocation){
-      if(currentLocation.latitude !=null && currentLocation.longitude!=null){
+    _locationController.onLocationChanged
+        .listen((LocationData currentLocation) {
+      if (currentLocation.latitude != null &&
+          currentLocation.longitude != null) {
         setState(() {
-          _currentPosition =LatLng(currentLocation.latitude!, currentLocation.longitude!);;
+          _currentPosition =
+              LatLng(currentLocation.latitude!, currentLocation.longitude!);
         });
-        getPolylinePoints().then((coordinates){
+        getPolylinePoints().then((coordinates) {
           generatePolylineFromPoints(coordinates);
         });
       }
     });
   }
 
-  Future<List<LatLng>> getPolylinePoints() async{
+  Future<List<LatLng>> getPolylinePoints() async {
     List<LatLng> polylineCoordinates = [];
     PolylinePoints polylinePoints = PolylinePoints();
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-        googleApiKey: GOOGLE_MAPS_API_KEY,
-        request: PolylineRequest(
-            origin: PointLatLng(_currentPosition!.latitude, _currentPosition!.longitude),
-            destination: PointLatLng(_placeholder.latitude, _placeholder.longitude),
-            mode: TravelMode.driving
-        ),
+      googleApiKey: GOOGLE_MAPS_API_KEY,
+      request: PolylineRequest(
+          origin: PointLatLng(
+              _currentPosition!.latitude, _currentPosition!.longitude),
+          destination:
+              PointLatLng(_placeholder.latitude, _placeholder.longitude),
+          mode: TravelMode.driving),
     );
-    if(result.points.isNotEmpty){
-      result.points.forEach((PointLatLng point){
+    if (result.points.isNotEmpty) {
+      result.points.forEach((PointLatLng point) {
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
       });
-    }else{
+    } else {
       print(result.errorMessage);
     }
     return polylineCoordinates;
   }
-  void generatePolylineFromPoints(List<LatLng> polylineCoordinates)async{
-    PolylineId id = PolylineId("poly");
+
+  void generatePolylineFromPoints(List<LatLng> polylineCoordinates) async {
+    PolylineId id = const PolylineId("poly");
     Polyline polyline = Polyline(
         polylineId: id,
-        color: Colors.red,
+        color: Colors.deepOrange,
         points: polylineCoordinates,
-        width: 8
-    );
+        width: 8);
     setState(() {
       polylines[id] = polyline;
     });
   }
+
   Future<List<Map<String, dynamic>>> fetchBusStopNames() async {
     final DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
     final snapshot = await databaseRef.child('bus_routes/T1/stops').get();
@@ -263,10 +272,13 @@ class _MapPageState extends State<MapPage>{
     List<Map<String, dynamic>> busStops = [];
 
     if (snapshot.exists) {
-      Map<String, dynamic> stops = Map<String, dynamic>.from(snapshot.value as Map);
+      Map<String, dynamic> stops =
+          Map<String, dynamic>.from(snapshot.value as Map);
 
       for (var stop in stops.values) {
-        if (stop['name'] != null && stop['latitude'] != null && stop['longitude'] != null) {
+        if (stop['name'] != null &&
+            stop['latitude'] != null &&
+            stop['longitude'] != null) {
           busStops.add({
             'name': stop['name'],
             'latitude': stop['latitude'],
@@ -279,16 +291,18 @@ class _MapPageState extends State<MapPage>{
     return busStops;
   }
 
-
   Future<LatLng?> getCoordinatesForBusStop(String busStopName) async {
     final DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
     final snapshot = await databaseRef.child('bus_routes/T1/stops').get();
 
     if (snapshot.exists) {
-      Map<String, dynamic> stops = Map<String, dynamic>.from(snapshot.value as Map);
+      Map<String, dynamic> stops =
+          Map<String, dynamic>.from(snapshot.value as Map);
 
       for (var stop in stops.values) {
-        if (stop['name'] == busStopName && stop['latitude'] != null && stop['longitude'] != null) {
+        if (stop['name'] == busStopName &&
+            stop['latitude'] != null &&
+            stop['longitude'] != null) {
           double latitude = double.parse(stop['latitude'].toString());
           double longitude = double.parse(stop['longitude'].toString());
           return LatLng(latitude, longitude);
@@ -297,6 +311,4 @@ class _MapPageState extends State<MapPage>{
     }
     return null; // Return null if the bus stop or coordinates aren't found
   }
-
-
 }
