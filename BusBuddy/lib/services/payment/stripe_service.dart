@@ -14,7 +14,7 @@ class StripeService {
     try {
       String? paymentIntentClientSecret = await _createPaymentIntent(
         amount,
-        "zar",
+        'zar',
       );
       if (paymentIntentClientSecret == null) return;
       await Stripe.instance.initPaymentSheet(
@@ -33,24 +33,24 @@ class StripeService {
     try {
       final Dio dio = Dio();
       Map<String, dynamic> data = {
-        "amount": _calculateAmount(
+        'amount': _calculateAmount(
           amount,
         ),
-        "currency": currency,
+        'currency': currency,
       };
       var response = await dio.post(
-        "https://api.stripe.com/v1/payment_intents",
+        'https://api.stripe.com/v1/payment_intents',
         data: data,
         options: Options(
           contentType: Headers.formUrlEncodedContentType,
           headers: {
-            "Authorization": "Bearer $stripeSecretKey",
-            "Content-Type": 'application/x-www-form-urlencoded'
+            'Authorization': 'Bearer $stripeSecretKey',
+            'Content-Type': 'application/x-www-form-urlencoded'
           },
         ),
       );
       if (response.data != null) {
-        return response.data["client_secret"];
+        return response.data['client_secret'];
       }
       return null;
     } catch (e) {

@@ -8,13 +8,13 @@ Future<int?> promptForPayment(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: const Text("Enter Amount"),
+        title: const Text('Enter Amount'),
         content: TextField(
           controller: amountController,
           keyboardType: TextInputType.number,
           decoration: const InputDecoration(
-            labelText: "Amount (ZAR)",
-            prefixText: "R ",
+            labelText: 'Amount (ZAR)',
+            prefixText: 'R ',
           ),
         ),
         actions: [
@@ -22,7 +22,7 @@ Future<int?> promptForPayment(
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: const Text("Cancel"),
+            child: const Text('Cancel'),
           ),
           TextButton(
             onPressed: () {
@@ -31,11 +31,11 @@ Future<int?> promptForPayment(
                 Navigator.of(context).pop(enteredAmount);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Please enter a valid amount")),
+                  const SnackBar(content: Text('Please enter a valid amount')),
                 );
               }
             },
-            child: const Text("Pay"),
+            child: const Text('Pay'),
           ),
         ],
       );

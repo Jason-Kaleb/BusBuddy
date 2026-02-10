@@ -53,7 +53,7 @@ class _UpdateEmailViewState extends State<UpdateEmailView> {
                 const Column(
                   children: <Widget>[
                     Text(
-                      "Update Your Email",
+                      'Update Your Email',
                       style: TextStyle(
                           fontSize: 30,
                           color: Colors.black,
@@ -63,7 +63,7 @@ class _UpdateEmailViewState extends State<UpdateEmailView> {
                       height: 20,
                     ),
                     Text(
-                      "Please enter your email",
+                      'Please enter your email',
                       style: TextStyle(
                         fontSize: 18,
                       ),
@@ -107,7 +107,7 @@ class _UpdateEmailViewState extends State<UpdateEmailView> {
                           ),
                           borderRadius: BorderRadius.all(Radius.circular(20.0)),
                         ),
-                        labelText: "Enter your new email",
+                        labelText: 'Enter your new email',
                         labelStyle:
                             TextStyle(color: Colors.black, fontSize: 18),
                         alignLabelWithHint: true,
@@ -136,7 +136,7 @@ class _UpdateEmailViewState extends State<UpdateEmailView> {
                         }
                       },
                       child: const Text(
-                        "Update Email",
+                        'Update Email',
                       ),
                     ),
                   ],

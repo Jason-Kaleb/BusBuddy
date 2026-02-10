@@ -51,10 +51,10 @@ class _MapViewState extends State<MapView> {
             children: [
               TileLayer(
                 urlTemplate:
-                    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                 subdomains: const ['a', 'b', 'c'],
                 additionalOptions: const {
-                  'attribution': "© OpenStreetMap contributors",
+                  'attribution': '© OpenStreetMap contributors',
                 },
               ),
               PolylineLayer(
@@ -106,7 +106,7 @@ class _MapViewState extends State<MapView> {
             right: 15,
             bottom: 100,
             child: FloatingActionButton(
-              heroTag: "zoom_1",
+              heroTag: 'zoom_1',
               onPressed: () {
                 setState(() {
                   _currentZoom += 1;
@@ -120,7 +120,7 @@ class _MapViewState extends State<MapView> {
             right: 15,
             bottom: 30,
             child: FloatingActionButton(
-              heroTag: "zoom_2",
+              heroTag: 'zoom_2',
               onPressed: () {
                 setState(() {
                   _currentZoom -= 1;

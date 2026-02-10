@@ -219,7 +219,7 @@ class _PaymentViewState extends State<PaymentView> {
     if (amount != null) {
       try {
         await StripeService.instance.makePayment(
-          merchantDisplayName: "Bus Buddy Points",
+          merchantDisplayName: 'Bus Buddy Points',
           amount: amount,
         );
 
@@ -232,16 +232,16 @@ class _PaymentViewState extends State<PaymentView> {
           final uid = user.uid;
           final DatabaseReference ref = FirebaseDatabase.instance.ref('users/$uid/points');
           await ref.set(_points);
-          print("Payment successful");
+          print('Payment successful');
         }
       } catch (e) {
         if (mounted) {
-          showErrorDialog(context, "An error occurred during payment: ${e.toString()}");
+          showErrorDialog(context, 'An error occurred during payment: ${e.toString()}');
         }
       }
     } else {
       if (mounted) {
-        showErrorDialog(context, "Payment was canceled or no amount was entered.");
+        showErrorDialog(context, 'Payment was canceled or no amount was entered.');
       }
     }
   }

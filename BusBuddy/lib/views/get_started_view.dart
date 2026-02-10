@@ -21,18 +21,18 @@ class _GetStartedViewState extends State<GetStartedView> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Image.asset("assets/images/JzTrackr.png"),
+            Image.asset('assets/images/JzTrackr.png'),
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 50.0, horizontal: 16.0),
               child: Text(
-                "FIND YOUR BUS WITH US",
+                'FIND YOUR BUS WITH US',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
                 textAlign: TextAlign.center,
               ),
             ),
             const SizedBox(height: 16.0),
             const Text(
-              "With Us, You can track your bus at any given time.",
+              'With Us, You can track your bus at any given time.',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
               textAlign: TextAlign.center,
             ),

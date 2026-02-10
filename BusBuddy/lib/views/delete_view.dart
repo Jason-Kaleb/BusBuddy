@@ -131,7 +131,7 @@ Future<void> onDeleteUserButtonPressed(BuildContext context) async {
       }
     } else {
       if (context.mounted) {
-        showPasswordNotEnteredDialog(context, "No password was entered");
+        showPasswordNotEnteredDialog(context, 'No password was entered');
       }
     }
   } on WrongPasswordAuthException {

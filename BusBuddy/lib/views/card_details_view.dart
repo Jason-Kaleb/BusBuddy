@@ -76,7 +76,7 @@ class _CardDetailsViewState extends State<CardDetailsView> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Expiration Date",
+                            'Expiration Date',
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 20.0,
@@ -112,7 +112,7 @@ class _CardDetailsViewState extends State<CardDetailsView> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "CVV",
+                            'CVV',
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 20.0,
@@ -146,7 +146,7 @@ class _CardDetailsViewState extends State<CardDetailsView> {
                 ),
                 SizedBox(height: sizedBoxSpacing),
                 const Text(
-                  "Cardholder name",
+                  'Cardholder name',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 20.0,
@@ -181,7 +181,7 @@ class _CardDetailsViewState extends State<CardDetailsView> {
                       foregroundColor: Colors.white,
                     ),
                     child: const Text(
-                      "Pay Now",
+                      'Pay Now',
                       style: TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,

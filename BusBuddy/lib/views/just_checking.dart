@@ -46,7 +46,7 @@ class _MapViewState extends State<MapViews> {
   Widget build(BuildContext context) {
     return _currentPosition == null
         ? const Center(
-            child: Text("Loading..."),
+            child: Text('Loading...'),
           )
         : Scaffold(
             key: _scaffoldKey,
@@ -55,27 +55,27 @@ class _MapViewState extends State<MapViews> {
               children: [
                 Center(
                   child: GoogleMap(
-                    onMapCreated: ((GoogleMapController controller) => {
+                    onMapCreated: (GoogleMapController controller) => {
                           if (!_mapController.isCompleted)
                             {_mapController.complete(controller)},
-                        }),
+                        },
                     initialCameraPosition: const CameraPosition(
                       target: _pGooglePlex,
                       zoom: 20,
                     ),
                     markers: {
                       Marker(
-                        markerId: const MarkerId("_currentLocation"),
+                        markerId: const MarkerId('_currentLocation'),
                         icon: BitmapDescriptor.defaultMarker,
                         position: _currentPosition!,
                       ),
                       const Marker(
-                        markerId: MarkerId("_sourceLocation"),
+                        markerId: MarkerId('_sourceLocation'),
                         icon: BitmapDescriptor.defaultMarker,
                         position: _pGoudStreet,
                       ),
                       const Marker(
-                        markerId: MarkerId("_destinationLocation"),
+                        markerId: MarkerId('_destinationLocation'),
                         icon: BitmapDescriptor.defaultMarker,
                         position: _pSouthgate,
                       )
@@ -108,32 +108,32 @@ class _MapViewState extends State<MapViews> {
 
   Future<void> _cameraToPosition(LatLng pos) async {
     final GoogleMapController controller = await _mapController.future;
-    CameraPosition _newCameraPosition = CameraPosition(
+    CameraPosition newCameraPosition = CameraPosition(
       target: pos,
       zoom: 13,
     );
     await controller.animateCamera(
-      CameraUpdate.newCameraPosition(_newCameraPosition),
+      CameraUpdate.newCameraPosition(newCameraPosition),
     );
   }
 
   Future<void> getLocationUpdates() async {
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
+    bool serviceEnabled;
+    PermissionStatus permissionGranted;
 
-    _serviceEnabled = await _locationController.serviceEnabled();
+    serviceEnabled = await _locationController.serviceEnabled();
 
-    if (_serviceEnabled) {
-      _serviceEnabled = await _locationController.requestService();
+    if (serviceEnabled) {
+      serviceEnabled = await _locationController.requestService();
     } else {
       return;
     }
 
-    _permissionGranted = await _locationController.hasPermission();
+    permissionGranted = await _locationController.hasPermission();
 
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await _locationController.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await _locationController.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
         return;
       }
     }
@@ -175,7 +175,7 @@ class _MapViewState extends State<MapViews> {
   }
 
   void generatePolylineFromPoints(List<LatLng> polylineCoordinates) async {
-    PolylineId id = const PolylineId("poly");
+    PolylineId id = const PolylineId('poly');
     Polyline polyline = Polyline(
       polylineId: id,
       color: Colors.blue,

@@ -57,7 +57,7 @@ class _UpdateInfoViewState extends State<UpdateInfoView> {
                 const Column(
                   children: <Widget>[
                     Text(
-                      "Update Your Name",
+                      'Update Your Name',
                       style: TextStyle(
                           fontSize: 30,
                           color: Colors.black,
@@ -67,7 +67,7 @@ class _UpdateInfoViewState extends State<UpdateInfoView> {
                       height: 20,
                     ),
                     Text(
-                      "Please enter your name as it appears on your ID or passport",
+                      'Please enter your name as it appears on your ID or passport',
                       style: TextStyle(
                         fontSize: 18,
                       ),
@@ -110,7 +110,7 @@ class _UpdateInfoViewState extends State<UpdateInfoView> {
                           ),
                           borderRadius: BorderRadius.all(Radius.circular(20.0)),
                         ),
-                        labelText: "Enter your first name",
+                        labelText: 'Enter your first name',
                         labelStyle:
                             TextStyle(color: Colors.black, fontSize: 18),
                         alignLabelWithHint: true,
@@ -150,7 +150,7 @@ class _UpdateInfoViewState extends State<UpdateInfoView> {
                           ),
                           borderRadius: BorderRadius.all(Radius.circular(20.0)),
                         ),
-                        labelText: "Enter your your last name",
+                        labelText: 'Enter your your last name',
                         labelStyle:
                             TextStyle(color: Colors.black, fontSize: 18),
                         alignLabelWithHint: true,
@@ -166,14 +166,14 @@ class _UpdateInfoViewState extends State<UpdateInfoView> {
                       onPressed: () async {
                         final name = _nameController.text;
                         final lastName = _lastNameController.text;
-                        final String fullName = "$name $lastName";
+                        final String fullName = '$name $lastName';
                         try {
                           await AuthService().updateDisplayName(fullName);
 
                           if (context.mounted) {
                             showSuccessDialog(
                               context,
-                              "Name updated successfully",
+                              'Name updated successfully',
                             );
                           }
 
@@ -181,12 +181,12 @@ class _UpdateInfoViewState extends State<UpdateInfoView> {
                           _lastNameController.clear();
                         } catch (e) {
                           if (context.mounted) {
-                            showErrorDialog(context, "Unexpected error");
+                            showErrorDialog(context, 'Unexpected error');
                           }
                         }
                       },
                       child: const Text(
-                        "Update",
+                        'Update',
                       ),
                     ),
                   ],

@@ -150,7 +150,7 @@ class _MapPageState extends State<MapPage> {
               });
             },
             child: _currentPosition == null
-                ? const Center(child: Text("Loading..."))
+                ? const Center(child: Text('Loading...'))
                 : GoogleMap(
                     onMapCreated: (GoogleMapController controller) {
                       _mapController.complete(controller);
@@ -162,12 +162,12 @@ class _MapPageState extends State<MapPage> {
                     ),
                     markers: {
                       Marker(
-                        markerId: const MarkerId("_currentLocation"),
+                        markerId: const MarkerId('_currentLocation'),
                         icon: BitmapDescriptor.defaultMarker,
                         position: _currentPosition!,
                       ),
                       Marker(
-                        markerId: const MarkerId("_destinationLocation"),
+                        markerId: const MarkerId('_destinationLocation'),
                         icon: BitmapDescriptor.defaultMarker,
                         position: _placeholder,
                       ),
@@ -227,29 +227,29 @@ class _MapPageState extends State<MapPage> {
 
   Future<void> _cameraToPosition(LatLng pos) async {
     final GoogleMapController controller = await _mapController.future;
-    CameraPosition _newCameraPosition = CameraPosition(
+    CameraPosition newCameraPosition = CameraPosition(
       target: pos,
       zoom: 13,
     );
     await controller.animateCamera(
-      CameraUpdate.newCameraPosition(_newCameraPosition),
+      CameraUpdate.newCameraPosition(newCameraPosition),
     );
   }
 
   Future<void> getLocationUpdates() async {
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
+    bool serviceEnabled;
+    PermissionStatus permissionGranted;
 
-    _serviceEnabled = await _locationController.serviceEnabled();
-    if (_serviceEnabled) {
-      _serviceEnabled = await _locationController.requestService();
+    serviceEnabled = await _locationController.serviceEnabled();
+    if (serviceEnabled) {
+      serviceEnabled = await _locationController.requestService();
     } else {
       return;
     }
-    _permissionGranted = await _locationController.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await _locationController.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
+    permissionGranted = await _locationController.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await _locationController.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
         return;
       }
     }
@@ -282,9 +282,9 @@ class _MapPageState extends State<MapPage> {
           mode: TravelMode.driving),
     );
     if (result.points.isNotEmpty) {
-      result.points.forEach((PointLatLng point) {
+      for (var point in result.points) {
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
-      });
+      }
     } else {
       print(result.errorMessage);
     }
@@ -292,7 +292,7 @@ class _MapPageState extends State<MapPage> {
   }
 
   void generatePolylineFromPoints(List<LatLng> polylineCoordinates) async {
-    PolylineId id = const PolylineId("poly");
+    PolylineId id = const PolylineId('poly');
     Polyline polyline = Polyline(
         polylineId: id,
         color: Colors.deepOrange,

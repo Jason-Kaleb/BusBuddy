@@ -291,28 +291,28 @@ class _RegisterViewState extends State<RegisterView> {
                     if (context.mounted) {
                       await showErrorDialog(
                         context,
-                        "Email already in use",
+                        'Email already in use',
                       );
                     }
                   } on InvalidEmailAuthException {
                     if (context.mounted) {
                       await showErrorDialog(
                         context,
-                        "Invalid email",
+                        'Invalid email',
                       );
                     }
                   } on WeakPasswordAuthException {
                     if (context.mounted) {
                       await showErrorDialog(
                         context,
-                        "Password should be at least 6 characters",
+                        'Password should be at least 6 characters',
                       );
                     }
                   } on GenericAuthException {
                     if (context.mounted) {
                       await showErrorDialog(
                         context,
-                        "Something went wrong",
+                        'Something went wrong',
                       );
                     }
                   }
